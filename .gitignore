@@ -22,3 +22,31 @@
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
 replay_pid*
+
+# ==================================
+# IntelliJ IDEA 特定文件
+# ==================================
+.idea/
+*.iml
+*.iws
+*.ipr
+out/
+
+# ==================================
+# 构建工具 (Maven / Gradle) - 你学 JavaEE 肯定会用到
+# ==================================
+target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+
+.gradle/
+build/
+
+# ==================================
+# 操作系统自动生成的垃圾文件 (Windows/Mac)
+# ==================================
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+.DS_Store
