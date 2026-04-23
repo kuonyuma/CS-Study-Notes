@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<!-- 图片相关测试 -->
+<img src="img/tobiichi.jpg" width = "200px"
+     height="200px" border = "1px" title="我TM莱纳"
+alt = "有点似了"/>
+
+<!-- 超链接a -->
+
+<a href="https://baidu.com"> 点击飞升百度</a>
+<!-- 添加一个图片的href -->
+<a href = "https://baidu.com" target = "_blank">
+    <img src="img/tobiichi.jpg"  width = "200px"
+                                    height="200px" border = "1px"
+title="点击飞升百度">
+</a>
+
+<!-- 跳转本地 html -->
+<a href="test02.html" target="_self"> 点击飞升另一个html</a>
+
+
+<!-- 学习表格标签table -->
+<table border = "1" width="100" height = "200" cellspacing="0"
+cellpadding="30" align = "center">
+    <tr>
+        <td>名字</td>
+        <td>邮箱</td>
+        <td>id</td>
+        <td>性别</td>
+    </tr >
+
+    <tr>
+      <td>张三</td>
+      <td>zhangsan@example.com</td>
+      <td>001</td>
+      <td rowspan="2">男</td>
+    </tr>
+
+    <tr>
+        <td>四帮仁</td>
+        <td>101@example.com</td>
+        <td>002</td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>亚托利</td>
+        <td>atori@gmail.com</td>
+        <td colspan="2">003/女</td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>李四</td>
+        <td>lis@gmail.com</td>
+        <td>004</td>
+        <td>女</td>
+    </tr>
+
+</table>
+
+
+<h1>这是无序列表的标题</h1>
+<!--
+disc
+square
+circle
+-->
+<ul type = "circle">
+
+  <li type = "square">咬人猫</li>
+  <li>兔总裁</li>
+  <li>阿叶君</li>
+</ul>
+
+<ol type = "i">
+  <li>咬人猫</li>
+  <li>兔总裁</li>
+  <li>阿叶君</li>
+</ol>
+
+<!-- 自定义列表 -->
+  <dl>
+    <dt> 这是一个dt</dt>
+    <dd>我好</dd>
+  </dl>
+
+<!-- 学习form与input -->
+<form action="">
+  用户名<input type="text">
+  密码 <input type="password">
+  性别：<input type="radio" name = "1">曼
+        <input type="radio" name = "1">女
+  <input type="checkbox">吃饭
+  <input type="checkbox">上课
+  <input type="checkbox">游戏
+  <input type="checkbox">睡觉
+
+  <input type="button" value="我是一个普通的按钮" onclick="alert('你好')">
+  <input type="text" name="username">
+  <input type="submit" value="提交">
+  <input type=" reset" value="重开">
+  <input type="file">
+
+</form>
+
+</body>
+</html>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CopilotDiffPersistence">
+    <option name="pendingDiffs">
+      <map>
+        <entry key="$PROJECT_DIR$/README.md">
+          <value>
+            <PendingDiffInfo>
+              <option name="filePath" value="$PROJECT_DIR$/README.md" />
+              <option name="updatedContent" value="# BlockingQueue Learning Demo&#10;&#10;This project now focuses on a beginner-friendly `BlockingQueue` demo using only `put()` and `take()`.&#10;&#10;## What it demonstrates&#10;&#10;- `take()` blocks when queue is empty&#10;- `put()` blocks when queue is full&#10;- another thread later unblocks the waiting thread&#10;&#13;&#10;## Files&#13;&#10;&#13;&#10;- `src/MyBlockingQueue.java`: beginner demo with 2 blocking scenes&#10;- `src/Test.java`: tiny runner that calls `MyBlockingQueue.main(...)`&#13;&#10;&#13;&#10;## Run (PowerShell)&#13;&#10;&#13;&#10;```powershell&#13;&#10;Set-Location &quot;A:\mycode\java\2026\myBlockingQueue&quot;&#13;&#10;javac src\MyBlockingQueue.java src\Test.java&#13;&#10;java -cp src Test&#13;&#10;```&#13;&#10;&#13;&#10;You should see logs with thread names and timestamps, including lines like:&#10;&#10;- `consumer calls take(), queue is empty -&gt; block`&#10;- `producer puts 100`&#10;- `producer calls put(2), queue full -&gt; block`&#10;&#13;&#10;" />
+            </PendingDiffInfo>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+</project>
