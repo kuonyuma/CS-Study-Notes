@@ -6,15 +6,21 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class Test {
-
-    public static void main(String[] args) throws InterruptedException {
+    public static void main() {
+        int ch = '中';
+        System.out.println(ch);
+        char ch1 = '中';
+        System.out.println(ch1);
+        String ch2 = "中";
+        System.out.println(ch2);
+    }
+    public static void main1(String[] args) throws InterruptedException {
 //        Thread t1 = new Thread(()->{
 //            System.out.println("t1 线程");
 //        });
 //
 //        t1.start();
         MyThreadPool pool = new MyThreadPool(2);
-
         for (int i = 1; i <= 10; i++) {
             final int taskId = i;
             pool.submit(() -> {
@@ -31,7 +37,7 @@ public class Test {
     }
 
 
-    public static void main1(String[] args) {
+    public static void main3(String[] args) {
 
 
         BlockingQueue<Runnable> queue = new ArrayBlockingQueue<>(2);
@@ -68,19 +74,6 @@ public class Test {
 
             });
         }
-
-        t1.shutdown();
-        try {
-            if (!t1.awaitTermination(10, TimeUnit.SECONDS)) {
-                System.out.println("线程池在规定时间内未结束，准备强制关闭");
-                t1.shutdownNow();
-            }
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-            t1.shutdownNow();
-        }
-
-        System.out.println("线程池已关闭，演示结束。");
     }
 
 }

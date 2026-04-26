@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>图书管理系统 - 列表</title>
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #f5f5f5; margin: 0; padding: 20px; }
+        h2 { text-align: center; color: #333; }
+        .container { max-width: 1000px; margin: 0 auto; background-color: white; padding: 20px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+        .top-actions { margin-bottom: 15px; }
+        .btn { padding: 8px 12px; background-color: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; text-decoration: none; }
+        .btn-danger { background-color: #dc3545; }
+        .btn:hover { opacity: 0.8; }
+        table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+        th, td { border: 1px solid #ddd; padding: 10px; text-align: center; }
+        th { background-color: #f8f9fa; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>图书列表展示</h2>
+        <div class="top-actions">
+            <a href="book_add.html" class="btn">添加图书</a>
+            <button class="btn btn-danger" onclick="batchDelete()">批量删除</button>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>选择</th>
+                    <th>图书ID</th>
+                    <th>书名</th>
+                    <th>作者</th>
+                    <th>数量</th>
+                    <th>定价</th>
+                    <th>出版社</th>
+                    <th>状态</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- 数据由JS渲染 -->
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        $(function () {
+            getBookList();
+        });
+
+        function getBookList() {
+            $.ajax({
+                type: "get",
+                url: "/book/getList",
+                success: function (result) {
+                    if (result != null) {
+                        var finalHtml = "";
+                        for (var book of result) {
+                            finalHtml += '<tr>';
+                            finalHtml += '<td><input type="checkbox" name="selectBook" value="' + book.id + '" class="book-select"></td>';
+                            finalHtml += '<td>' + book.id + '</td>';
+                            finalHtml += '<td>' + book.bookName + '</td>';
+                            finalHtml += '<td>' + book.author + '</td>';
+                            finalHtml += '<td>' + book.count + '</td>';
+                            finalHtml += '<td>' + book.price + '</td>';
+                            finalHtml += '<td>' + book.publish + '</td>';
+                            finalHtml += '<td>' + book.statusCN + '</td>';
+                            finalHtml += '<td>';
+                            finalHtml += '<a href="book_update.html?bookId=' + book.id + '">修改</a> | ';
+                            finalHtml += '<a href="javascript:void(0)" onclick="deleteBook(' + book.id + ')">删除</a>';
+                            finalHtml += '</td>';
+                            finalHtml += '</tr>';
+                        }
+                        $("tbody").html(finalHtml);
+                    }
+                }
+            });
+        }
+
+        function deleteBook(id) {
+            if (confirm("确定要删除吗？")) {
+                $.ajax({
+                    type: "post",
+                    url: "/book/delete",
+                    data: { bookId: id },
+                    success: function (result) {
+                        if (result) {
+                            alert("删除成功！");
+                            getBookList();
+                        } else {
+                            alert("删除失败！");
+                        }
+                    }
+                });
+            }
+        }
+
+        function batchDelete() {
+            var selectedIds = [];
+            $("input[name='selectBook']:checked").each(function () {
+                selectedIds.push($(this).val());
+            });
+
+            if (selectedIds.length === 0) {
+                alert("请先选择要删除的图书！");
+                return;
+            }
+
+            if (confirm("确定要删除选中的 " + selectedIds.length + " 本书吗？")) {
+                $.ajax({
+                    type: "post",
+                    url: "/book/batchDelete",
+                    data: { ids: selectedIds },
+                    success: function (result) {
+                        if (result) {
+                            alert("批量删除成功！");
+                            getBookList();
+                        } else {
+                            alert("批量删除失败！");
+                        }
+                    }
+                });
+            }
+        }
+    </script>
+</body>
+</html>

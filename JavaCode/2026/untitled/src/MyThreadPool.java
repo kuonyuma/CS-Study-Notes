@@ -16,8 +16,6 @@ public class MyThreadPool {
 
         for (int i = 0; i < MyQueueCount; i++) {
             works[i] = new Thread(()->{
-
-
                 try {
                     while(true){
                         Runnable task = queue.pop();
