@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>简易留言板</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h2 {
+            text-align: center;
+            color: #333;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        input[type="text"], textarea {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+        hr {
+            margin: 20px 0;
+        }
+        .message-list {
+            margin-top: 20px;
+        }
+        .message-item {
+            background-color: #f9f9f9;
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+            margin-bottom: 10px;
+            border-radius: 4px;
+        }
+        .message-header {
+            font-weight: bold;
+            color: #555;
+            margin-bottom: 5px;
+        }
+        .message-content {
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>留言板</h2>
+        <div class="form-group">
+            <label for="from">来自:</label>
+            <input type="text" id="from" placeholder="你的名字">
+        </div>
+        <div class="form-group">
+            <label for="to">发送给:</label>
+            <input type="text" id="to" placeholder="收信人名字">
+        </div>
+        <div class="form-group">
+            <label for="message">内容:</label>
+            <textarea id="message" rows="4" placeholder="写下你的留言"></textarea>
+        </div>
+        <button onclick="submitMessage()">提交留言</button>
+
+        <hr>
+
+        <h3>所有留言</h3>
+        <div id="messageList" class="message-list">
+            <!-- 留言列表将显示在这里 -->
+        </div>
+    </div>
+
+    <script>
+        // 页面加载时获取留言
+        window.onload = function() {
+            fetchMessages();
+        };
+
+        function submitMessage() {
+            const from = document.getElementById('from').value;
+            const to = document.getElementById('to').value;
+            const message = document.getElementById('message').value;
+
+            if (!from || !to || !message) {
+                alert('请填写完整信息');
+                return;
+            }
+
+            // 因为去掉了 @RequestBody，后端恢复使用 Query String 参数绑定 (GET 请求)
+            const url = `/GetMessage/Get?from=${encodeURIComponent(from)}&to=${encodeURIComponent(to)}&message=${encodeURIComponent(message)}`;
+
+            fetch(url)
+                .then(response => response.text())
+                .then(data => {
+                    alert(data);
+                    if (data === "已经成功留言") {
+                        // 清空输入框
+                        document.getElementById('from').value = '';
+                        document.getElementById('to').value = '';
+                        document.getElementById('message').value = '';
+                        // 刷新列表
+                        fetchMessages();
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('提交失败');
+                });
+        }
+
+        function fetchMessages() {
+            // 根据后端接口：/GetMessage/chekMessage
+            fetch('/GetMessage/chekMessage')
+                .then(response => {
+                    if (response.status === 204 || response.status === 404) {
+                        return [];
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    const listDiv = document.getElementById('messageList');
+                    listDiv.innerHTML = '';
+
+                    if (!data || data.length === 0) {
+                        listDiv.innerHTML = '<p>暂无留言</p>';
+                        return;
+                    }
+
+                    data.forEach(msg => {
+                        const item = document.createElement('div');
+                        item.className = 'message-item';
+                        item.innerHTML = `
+                            <div class="message-header">从 ${msg.from} 到 ${msg.to}:</div>
+                            <div class="message-content">${msg.message}</div>
+                        `;
+                        listDiv.appendChild(item);
+                    });
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        }
+    </script>
+</body>
+</html>
+
