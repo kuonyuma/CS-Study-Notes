@@ -54,10 +54,17 @@
     </div>
 
     <script>
+        /**
+         * 页面加载完成后的初始化操作
+         */
         $(function () {
+            // 1. 从浏览器地址栏获取要修改的图书 ID
+            // 例如：book_update.html?bookId=1
             var urlParams = new URLSearchParams(window.location.search);
             var bookId = urlParams.get('bookId');
+
             if (bookId) {
+                // 如果地址栏有 ID，则根据 ID 加载图书数据
                 loadBookData(bookId);
             } else {
                 alert("未指定需要修改的图书ID！");
@@ -65,14 +72,20 @@
             }
         });
 
+        /**
+         * 根据 ID 向后端请求单项图书数据并回显到表单
+         * @param id 图书 ID
+         */
         function loadBookData(id) {
             $.ajax({
-                type: "get",
-                url: "/book/getById",
-                data: { bookId: id },
+                type: "get",           // 使用 GET 方式
+                url: "/book/getById",   // 后端查询单本图书的接口
+                data: { bookId: id },   // 发送 ID 给后端
                 success: function (book) {
+                    // book 是后端返回的图书对象（JSON）
                     if (book) {
-                        $("#bookId").val(book.id);
+                        // 2. 将数据填入各个输入框中（数据回显）
+                        $("#bookId").val(book.id);     // 隐藏域 ID
                         $("#bookName").val(book.bookName);
                         $("#author").val(book.author);
                         $("#count").val(book.count);
@@ -87,9 +100,13 @@
             });
         }
 
+        /**
+         * 提交修改数据的函数
+         */
         function updateBook() {
+            // 3. 构建要发送的 JSON 对象
             var data = {
-                id: $("#bookId").val(),
+                id: $("#bookId").val(), // 获取隐藏的 ID，确保后端知道修改哪本书
                 bookName: $("#bookName").val(),
                 author: $("#author").val(),
                 count: $("#count").val(),
@@ -98,6 +115,7 @@
                 status: $("#status").val()
             };
 
+            // 4. 发起请求
             $.ajax({
                 type: "post",
                 url: "/book/update",
@@ -105,7 +123,7 @@
                 success: function (result) {
                     if (result) {
                         alert("修改成功！");
-                        location.href = "book_list.html";
+                        location.href = "book_list.html"; // 修改成功后返回列表页
                     } else {
                         alert("修改失败！");
                     }

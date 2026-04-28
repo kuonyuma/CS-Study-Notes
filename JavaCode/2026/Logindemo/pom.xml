@@ -9,10 +9,10 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.Lyuke</groupId>
-    <artifactId>bookSystem</artifactId>
+    <artifactId>Logindemo</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>bookSystem</name>
-    <description>bookSystem</description>
+    <name>Logindemo</name>
+    <description>Logindemo</description>
     <url/>
     <licenses>
         <license/>
@@ -31,12 +31,6 @@
     </properties>
     <dependencies>
         <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <optional>true</optional>
-        </dependency>
-
-        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-webmvc</artifactId>
         </dependency>
@@ -45,13 +39,6 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-webmvc-test</artifactId>
             <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <version>1.18.42</version>
-            <scope>compile</scope>
         </dependency>
     </dependencies>
 

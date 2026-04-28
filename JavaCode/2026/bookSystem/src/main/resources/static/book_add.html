@@ -54,24 +54,56 @@
 
     <script>
         function addBook() {
+            // 定义一个名为 data 的变量，它是一个 JavaScript 对象（类似 Java 的 Map 或实体类）
             var data = {
+                // 冒号左边：是属性名（Key），必须和后端 BookInfo 类的属性名一致
+                // 冒号右边：是获取数据的方法
+
+                // 找到 id 为 bookName 的输入框，取出用户输入的文字
                 bookName: $("#bookName").val(),
+
+                // 找到 id 为 author 的输入框，取出值
                 author: $("#author").val(),
+
+                // 找到 id 为 count 的输入框，取出数字
                 count: $("#count").val(),
+
+                // 找到 id 为 price 的输入框，取出定价
                 price: $("#price").val(),
+
+                // 找到 id 为 publish 的输入框，取出出版社名称
                 publish: $("#publish").val(),
+
+                // 找到 id 为 status 的下拉框，取出用户选中的状态值（1或2）
                 status: $("#status").val()
             };
 
             $.ajax({
+                // 1. 指定说话的方式：POST
+                //（通常用于向服务器“提交”或“新建”数据，对应后端的 @RequestMapping 或 @PostMapping）
                 type: "post",
+
+                // 2. 指定说话的对象：后端的接口地址
+                //（对应 BookController.java 中 @RequestMapping("/add") 的那个方法）
                 url: "/book/add",
+
+                // 3. 携带的数据：就是刚才打包好的 data 对象
+                //（包含书名、作者等信息，Spring Boot 会自动把它填进 Java 的 BookInfo 类里）
                 data: data,
+
+                // 4. 当服务器处理完并“回话”成功时，执行下面这个函数
+                // result 是后端 return 的结果（在你的 Java 代码里 return 了 boolean 类型的 true 或 false）
                 success: function (result) {
+
+                    // 如果后端返回的是 true (代表添加成功)
                     if (result) {
+                        // 弹出提示框告知用户
                         alert("添加成功！");
+                        // 就像点击了链接一样，把当前页面跳转到图书列表页
                         location.href = "book_list.html";
-                    } else {
+                    }
+                    // 如果返回的是 false
+                    else {
                         alert("添加失败！");
                     }
                 }

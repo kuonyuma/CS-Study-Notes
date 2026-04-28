@@ -45,19 +45,29 @@
     </div>
 
     <script>
+        /**
+         * 页面加载完成后的初始化操作
+         */
         $(function () {
+            // 页面一打开就调用函数从后端获取图书列表
             getBookList();
         });
 
+        /**
+         * 获取图书列表函数
+         */
         function getBookList() {
             $.ajax({
-                type: "get",
-                url: "/book/getList",
+                type: "get",           // 使用 GET 方式获取数据
+                url: "/book/getList",   // 后端获取列表的接口
                 success: function (result) {
+                    // result 是后端返回的图书对象数组
                     if (result != null) {
                         var finalHtml = "";
+                        // 遍历数组，将每一本书的信息拼接成表格行 (tr)
                         for (var book of result) {
                             finalHtml += '<tr>';
+                            // 复选框，用于批量删除，value 绑定图书 ID
                             finalHtml += '<td><input type="checkbox" name="selectBook" value="' + book.id + '" class="book-select"></td>';
                             finalHtml += '<td>' + book.id + '</td>';
                             finalHtml += '<td>' + book.bookName + '</td>';
@@ -65,28 +75,36 @@
                             finalHtml += '<td>' + book.count + '</td>';
                             finalHtml += '<td>' + book.price + '</td>';
                             finalHtml += '<td>' + book.publish + '</td>';
-                            finalHtml += '<td>' + book.statusCN + '</td>';
+                            finalHtml += '<td>' + book.statusCN + '</td>'; // statusCN 是后端处理好的状态文字（如“可借阅”）
                             finalHtml += '<td>';
+                            // 修改链接：带上当前书的 ID 跳转到修改页面
                             finalHtml += '<a href="book_update.html?bookId=' + book.id + '">修改</a> | ';
+                            // 删除链接：点击触发 deleteBook 函数
                             finalHtml += '<a href="javascript:void(0)" onclick="deleteBook(' + book.id + ')">删除</a>';
                             finalHtml += '</td>';
                             finalHtml += '</tr>';
                         }
+                        // 将拼接好的 HTML 代码插入到 tbody 标签中
                         $("tbody").html(finalHtml);
                     }
                 }
             });
         }
 
+        /**
+         * 删除单本图书函数
+         * @param id 图书 ID
+         */
         function deleteBook(id) {
             if (confirm("确定要删除吗？")) {
                 $.ajax({
                     type: "post",
                     url: "/book/delete",
-                    data: { bookId: id },
+                    data: { bookId: id }, // 发送要删除的 ID
                     success: function (result) {
                         if (result) {
                             alert("删除成功！");
+                            // 刷新列表显示最新数据
                             getBookList();
                         } else {
                             alert("删除失败！");
@@ -96,8 +114,12 @@
             }
         }
 
+        /**
+         * 批量删除函数
+         */
         function batchDelete() {
             var selectedIds = [];
+            // 遍历所有被勾选的复选框，收集 ID
             $("input[name='selectBook']:checked").each(function () {
                 selectedIds.push($(this).val());
             });
@@ -111,10 +133,13 @@
                 $.ajax({
                     type: "post",
                     url: "/book/batchDelete",
+                    // 注意这里的键名 'ids' 与后端 @RequestParam("ids[]") 对应
+                    // jQuery 默认会把数组转换成 ids[]=1&ids[]=2 的格式
                     data: { ids: selectedIds },
                     success: function (result) {
                         if (result) {
                             alert("批量删除成功！");
+                            // 刷新列表
                             getBookList();
                         } else {
                             alert("批量删除失败！");

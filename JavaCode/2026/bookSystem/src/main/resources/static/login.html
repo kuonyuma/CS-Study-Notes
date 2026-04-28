@@ -30,18 +30,27 @@
     </div>
 
     <script>
+        /**
+         * 登录函数：当用户点击“登录”按钮时执行
+         */
         function login() {
+            // 发起 AJAX POST 请求
             $.ajax({
-                type: "post",
-                url: "/user/login",
+                type: "post",          // 请求方式为 POST
+                url: "/user/login",     // 后端登录接口地址
+                // 向后端发送的数据：用户名和密码
                 data: {
-                    userName: $("#userName").val(),
-                    password: $("#password").val()
+                    userName: $("#userName").val(), // 获取 id 为 userName 的输入框内容
+                    password: $("#password").val()  // 获取 id 为 password 的输入框内容
                 },
+                // success 是请求成功后的回调函数
                 success: function (result) {
+                    // result 是后端返回的结果（通常是 true 或 false）
                     if (result) {
+                        // 登录成功，跳转到图书列表页面
                         location.href = "book_list.html";
                     } else {
+                        // 登录失败，弹出错误提示
                         alert("账号或密码错误!");
                     }
                 }
