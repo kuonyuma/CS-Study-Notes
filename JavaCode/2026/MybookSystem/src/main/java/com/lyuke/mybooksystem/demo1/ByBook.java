@@ -36,17 +36,24 @@ public class ByBook {
         bookList.add(book);
         return bookList;
     }
+
     //删除
     @RequestMapping("/del")
-    public List<BookInfo> del(BookInfo book){
-        bookList.remove(book);
+    public List<BookInfo> del(String name){
+        for(BookInfo book : bookList){
+            if (name.equals(book.getName())) {
+                bookList.remove(book);
+                break;
+            }
+        }
         return bookList;
     }
+
     //查询图书
     @RequestMapping("/find")
-    public BookInfo find(BookInfo book){
+    public BookInfo find(String name){
         for (BookInfo e : bookList) {
-            if(e.equals(book)){
+            if(e.getName().equals(name)){
                 return e;
             }
         }
