@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>图书列表 - 图书管理系统</title>
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 2rem; background-color: #f8f9fa; }
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; }
+        table { width: 100%; border-collapse: collapse; background: white; }
+        th, td { padding: 12px; border: 1px solid #dee2e6; text-align: left; }
+        th { background-color: #007bff; color: white; }
+        tr:nth-child(even) { background-color: #f2f2f2; }
+        .btn { padding: 5px 10px; border: none; border-radius: 4px; cursor: pointer; }
+        .btn-del { background-color: #dc3545; color: white; }
+        .btn-add { background-color: #28a745; color: white; padding: 10px 20px; text-decoration: none; }
+        .search-container { margin-bottom: 1rem; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h2>图书列表</h2>
+        <a href="book_add.html" class="btn btn-add">添加新书</a>
+    </div>
+
+    <div class="search-container">
+        <input type="text" id="searchName" placeholder="输入书名查询...">
+        <button onclick="searchBook()">查询</button>
+        <button onclick="loadBooks()">刷新列表</button>
+    </div>
+
+    <table id="bookTable">
+        <thead>
+            <tr>
+                <th>书名</th>
+                <th>作者</th>
+                <th>价格</th>
+                <th>类型</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+
+    <script>
+        $(document).ready(function() {
+            loadBooks();
+        });
+
+        function loadBooks() {
+            $.ajax({
+                url: '/ByBook/list',
+                type: 'GET',
+                success: function(list) {
+                    renderTable(list);
+                }
+            });
+        }
+
+        function searchBook() {
+            const name = $('#searchName').val();
+            if(!name) return alert('请输入书名');
+            $.ajax({
+                url: '/ByBook/find',
+                type: 'GET',
+                data: { str: name }, // 注意后端参数名现在是 str
+                success: function(list) {
+                    if(list && list.length > 0) {
+                        renderTable(list);
+                    } else {
+                        alert('未找到相关图书');
+                        renderTable([]);
+                    }
+                }
+            });
+        }
+
+        function deleteBook(name) {
+            if(!confirm('确定删除《' + name + '》吗？')) return;
+            $.ajax({
+                url: '/ByBook/del',
+                type: 'POST',
+                data: { name: name },
+                success: function(list) {
+                    alert('删除成功');
+                    renderTable(list);
+                }
+            });
+        }
+
+        function renderTable(list) {
+            const tbody = $('#bookTable tbody');
+            tbody.empty();
+            if(!list || list.length === 0) {
+                tbody.append('<tr><td colspan="5" style="text-align:center">暂无数据</td></tr>');
+                return;
+            }
+            list.forEach(book => {
+                tbody.append(`
+                    <tr>
+                        <td>${book.name}</td>
+                        <td>${book.author}</td>
+                        <td>${book.price}</td>
+                        <td>${book.type}</td>
+                        <td>
+                            <button class="btn btn-del" onclick="deleteBook('${book.name}')">删除</button>
+                        </td>
+                    </tr>
+                `);
+            });
+        }
+    </script>
+</body>
+</html>
+
+

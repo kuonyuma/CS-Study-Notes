@@ -51,13 +51,32 @@ public class ByBook {
 
     //查询图书
     @RequestMapping("/find")
-    public BookInfo find(String name){
-        for (BookInfo e : bookList) {
-            if(e.getName().equals(name)){
-                return e;
+    public List<BookInfo> find(String str){
+        List<BookInfo> result = new ArrayList<>();
+        for(BookInfo book:bookList){
+            if (book.getName().contains(str)) {
+                result.add(book);
             }
         }
-        return null;
+        return result;
+    }
+
+    //改变图书信息
+    @RequestMapping("/upData")
+    public String upData(String oldName,BookInfo newBook){
+        for(int i = 0;i < bookList.size();i++){
+            if (bookList.get(i).getName().equals(oldName)) {
+                bookList.set(i,newBook);
+                return "修改成功";
+            }
+        }
+        return "修改失败";
+    }
+
+    //获取所有图书 (供前端页面加载列表)
+    @RequestMapping("/list")
+    public List<BookInfo> list(){
+        return bookList;
     }
 
 }
