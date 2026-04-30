@@ -1,6 +1,6 @@
 package com.lyuke.mybooksystem.demo2;
 
-public class Myfeind  {
+public class MyFind  {
 
     public int find(byte[] father,int faherLength,
                     byte[]Sum,int SumLength){

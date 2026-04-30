@@ -17,6 +17,7 @@ public class BookInfo {
         if (o == null || getClass() != o.getClass()) return false;
         BookInfo bookInfo = (BookInfo) o;
         return bookInfo.name.equals(this.name);
+        Thread
     }
 
     @Override
