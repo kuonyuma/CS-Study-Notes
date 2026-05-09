@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>关于我们 | 林间回音</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+        .about-content {
+            background-color: var(--white);
+            padding: 3rem;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            margin: 4rem auto;
+            max-width: 600px;
+            text-align: center;
+        }
+
+        .about-content h2 {
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+            font-size: 2rem;
+        }
+
+        .about-text {
+            color: var(--text-main);
+            line-height: 1.8;
+            margin-bottom: 2rem;
+        }
+        
+        .info-list {
+            list-style: none;
+            padding: 0;
+            text-align: left;
+            display: inline-block;
+            background-color: var(--secondary-color);
+            padding: 1.5rem 2rem;
+            border-radius: 8px;
+            width: 100%;
+        }
+
+        .info-list li {
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .info-list li:last-child {
+            margin-bottom: 0;
+        }
+
+        .info-list .material-icons {
+            color: var(--primary-color);
+            font-size: 1.2rem;
+        }
+        
+        .csdn-link {
+            color: var(--primary-color);
+            font-weight: bold;
+            text-decoration: underline;
+            text-decoration-color: var(--primary-light);
+            transition: var(--transition);
+        }
+        
+        .csdn-link:hover {
+            color: var(--accent-color);
+            text-decoration-color: var(--accent-color);
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                <span class="material-icons" style="color: var(--primary-color);">eco</span>
+                林间回音
+            </a>
+            <ul class="nav-links">
+                <li><a href="index.html">主页</a></li>
+                <li><a href="messages.html">留言大厅</a></li>
+                <li><a href="about.html" class="active">关于我们</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="detail-container">
+        <section class="about-content">
+            <h2>关于 林间回音</h2>
+            <div class="about-text">
+                <p>这是一个安静、治愈的树洞空间。在这里，你可以放下所有的防备，倾诉最真实的心声。</p>
+                <p>本项目为Web前端开发作业，旨在展示响应式布局与交互设计。</p>
+            </div>
+            
+            <ul class="info-list">
+                <li>
+                    <span class="material-icons">account_circle</span>
+                    <span>请关注 CSDN 博主：<a href="https://blog.csdn.net/" target="_blank" class="csdn-link">kuonyuma</a></span>
+                </li>
+                <li>
+                    <span class="material-icons">computer</span>
+                    <span>网页协助者：Gemini, Copilot 等 AI 工具</span>
+                </li>
+                <li>
+                    <span class="material-icons">contact_support</span>
+                    <span>如果有问题，请联系作者 QQ：<strong>3095515939</strong></span>
+                </li>
+            </ul>
+        </section>
+    </main>
+
+    <footer>
+        <p>© 2026 林间回音 Message Wall.</p>
+    </footer>
+
+    <script src="js/main.js"></script>
+</body>
+</html>

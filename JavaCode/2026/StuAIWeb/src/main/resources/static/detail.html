@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>留言详情 | 林间回音</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                <span class="material-icons" style="color: var(--primary-color);">eco</span>
+                林间回音
+            </a>
+            <ul class="nav-links">
+                <li><a href="index.html">主页</a></li>
+                <li><a href="messages.html" class="active">留言大厅</a></li>
+                <li><a href="about.html">关于我们</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="detail-container">
+        <!-- 详情展示区：图文混排 -->
+        <article class="article-content">
+            <header class="article-header">
+                <h1 class="article-title">正在加载...</h1>
+                <div class="article-meta">
+                </div>
+            </header>
+
+            <div class="article-body">
+                <p>请稍候...</p>
+            </div>
+        </article>
+
+        <!-- 评论展示区 -->
+        <section id="comments-section" class="article-content" style="margin-bottom: 2rem; display: none;">
+            <h3 style="color: var(--primary-color); border-bottom: 1px solid var(--secondary-color); padding-bottom: 1rem; margin-bottom: 1rem;">💬 评论回音</h3>
+            <div id="comments-container">
+                <!-- 评论内容将由 JS 动态生成 -->
+            </div>
+        </section>
+
+        <!-- 表单区：写下你的回音 -->
+        <section class="reply-section">
+            <h3>✏️ 写下你想说的话吧</h3>
+            <form id="reply-form">
+                <div class="form-group">
+                    <label for="name">你的称呼 (选填，默认为匿名路人)</label>
+                    <input type="text" id="name" class="form-control" placeholder="例如：听风的人" value="匿名路人">
+                </div>
+                <div class="form-group">
+                    <label for="message">你的回音 (必填)</label>
+                    <textarea id="message" class="form-control" placeholder="把你想对Ta说的话写在这里吧..."></textarea>
+                </div>
+                <button type="submit" class="btn" style="width: 100%;">投递回音</button>
+            </form>
+        </section>
+    </main>
+
+    <footer>
+        <p>© 2026 林间回音 Message Wall.</p>
+    </footer>
+
+    <script src="js/main.js"></script>
+</body>
+</html>

@@ -10,8 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RequestMapping("/UserController")
 @Controller
-//@Configuration
-@ResponseBody
+@Configuration
 public class UserController {
 
     @RequestMapping("/print")

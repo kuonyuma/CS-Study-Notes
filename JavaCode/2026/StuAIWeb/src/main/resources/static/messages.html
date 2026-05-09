@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>留言大厅 | 林间回音</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                <span class="material-icons" style="color: var(--primary-color);">eco</span>
+                林间回音
+            </a>
+            <ul class="nav-links">
+                <li><a href="index.html">主页</a></li>
+                <li><a href="messages.html" class="active">留言大厅</a></li>
+                <li><a href="about.html">关于我们</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main>
+        <!-- 搜索与筛选区 -->
+        <section class="filter-section">
+            <div style="width: 100%; max-width: 600px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                <h2 style="color: var(--primary-color);">大家的留言</h2>
+                <a href="detail.html" class="btn" style="padding: 0.5rem 1.5rem; font-size: 0.9rem;">+ 留个言吧</a>
+            </div>
+            <div class="search-bar">
+                <input type="text" id="search-input" class="search-input" placeholder="🔍 搜索留言内容或关键词...">
+            </div>
+            <div class="tags">
+                <span class="tag active" data-tag="all">全部留言</span>
+                <span class="tag" data-tag="life">碎碎念</span>
+                <span class="tag" data-tag="study">学业压力</span>
+                <span class="tag" data-tag="mood">心情日记</span>
+            </div>
+        </section>
+
+        <!-- 留言卡片展示区 -->
+        <section class="message-grid" id="message-container">
+            <div style="grid-column: 1 / -1; text-align: center; color: var(--text-muted); padding: 2rem;">
+                🌲 正在从森林深处读取回音...
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>© 2026 林间回音 Message Wall.</p>
+    </footer>
+
+    <script src="js/main.js"></script>
+</body>
+</html>
