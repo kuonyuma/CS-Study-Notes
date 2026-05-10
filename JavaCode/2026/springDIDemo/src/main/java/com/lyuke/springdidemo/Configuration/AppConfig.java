@@ -3,6 +3,7 @@ package com.lyuke.springdidemo.Configuration;
 import com.lyuke.springdidemo.Student.Student;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 
 @Configuration
 public class AppConfig {
@@ -13,9 +14,9 @@ public class AppConfig {
                 "tom@example.com", 18);
     }
 
-//    @Bean
-//    public Student student2() {
-//        return new Student("小明", "男",
-//                "小明@example.com", 28);
-//    }
+    @Bean
+    public Student student2() {
+        return new Student("小明", "男",
+                "小明@example.com", 28);
+    }
 }
