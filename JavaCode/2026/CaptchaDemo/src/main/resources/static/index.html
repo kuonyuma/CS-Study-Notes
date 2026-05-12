@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Captcha Test</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f2f5;
+            margin: 0;
+        }
+        .card {
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        .captcha-img {
+            cursor: pointer;
+            border: 1px solid #ccc;
+            margin-bottom: 1rem;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .input-group {
+            margin-bottom: 1rem;
+        }
+        input[type="text"] {
+            padding: 0.5rem;
+            font-size: 1rem;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            width: 150px;
+        }
+        button {
+            padding: 0.5rem 1rem;
+            font-size: 1rem;
+            cursor: pointer;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        #result {
+            margin-top: 1rem;
+            font-weight: bold;
+        }
+        .success { color: #28a745; }
+        .error { color: #dc3545; }
+    </style>
+</head>
+<body>
+
+<div class="card">
+    <h2>Enter Captcha</h2>
+    <!-- Image source maps to your generate endpoint. Adding onclick to refresh. -->
+    <img id="captchaImg" class="captcha-img" src="/HutoolCaptCha/SetCode" alt="Captcha Image" title="Click to refresh" onclick="refreshCaptcha()">
+
+    <div class="input-group">
+        <input type="text" id="clientInput" placeholder="Enter code" autocomplete="off" />
+    </div>
+
+    <button onclick="verifyCaptcha()">Verify</button>
+
+    <div id="result"></div>
+</div>
+
+<script>
+    function refreshCaptcha() {
+        // Appending a random number ensures the browser actually fetches a new image instead of using cache
+        document.getElementById('captchaImg').src = '/HutoolCaptCha/SetCode?' + Math.random();
+        document.getElementById('result').innerText = '';
+        document.getElementById('clientInput').value = '';
+    }
+
+    function verifyCaptcha() {
+        const input = document.getElementById('clientInput').value.trim();
+        if (!input) {
+            alert('Please enter the captcha code.');
+            return;
+        }
+
+        // Send AJAX request to the verification endpoint
+        fetch('/HutoolCaptCha/judgeCode?clientInput=' + encodeURIComponent(input))
+            .then(response => response.text())
+            .then(data => {
+                const resultDiv = document.getElementById('result');
+                // The controller returns a boolean true or false natively which toStrings to "true" or "false"
+                if (data === 'true') {
+                    resultDiv.innerText = 'Verification Successful!';
+                    resultDiv.className = 'success';
+                } else {
+                    resultDiv.innerText = 'Verification Failed. Try again.';
+                    resultDiv.className = 'error';
+                    refreshCaptcha(); // Optionally auto-refresh captcha on failure
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                document.getElementById('result').innerText = 'Error occurred during verification.';
+                document.getElementById('result').className = 'error';
+            });
+    }
+
+    // Allow pressing "Enter" in the text box to click verify
+    document.getElementById('clientInput').addEventListener('keypress', function (e) {
+        if (e.key === 'Enter') {
+            verifyCaptcha();
+        }
+    });
+</script>
+
+</body>
+</html>
+

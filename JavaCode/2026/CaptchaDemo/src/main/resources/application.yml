@@ -1,0 +1,11 @@
+spring:
+  application:
+    name: CaptchaDemo
+
+code:
+  height: 50
+  width: 50
+
+logging:
+  level:
+    com.lyuke.captchademo: INFO

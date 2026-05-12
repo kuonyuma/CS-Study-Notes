@@ -1,0 +1,23 @@
+{
+  "groups": [
+    {
+      "name": "code",
+      "type": "com.lyuke.captchademo.Code.Code",
+      "sourceType": "com.lyuke.captchademo.Code.Code"
+    }
+  ],
+  "properties": [
+    {
+      "name": "code.height",
+      "type": "java.lang.Integer",
+      "sourceType": "com.lyuke.captchademo.Code.Code"
+    },
+    {
+      "name": "code.width",
+      "type": "java.lang.Integer",
+      "sourceType": "com.lyuke.captchademo.Code.Code"
+    }
+  ],
+  "hints": []
+}
+
