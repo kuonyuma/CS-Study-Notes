@@ -29,12 +29,12 @@ public class UDPEchoServer {
                         0,
                         packet.getLength());
                 System.out.println("收到来自客户端的数据" + meesage);
-
+                //获取客户端的IP，端口
                 InetAddress inetAddress = packet.getAddress();
                 int clientport = packet.getPort();
 
                 //准备返回的数据
-                byte[] putmeesage = packet.getData();
+                byte[] putmeesage = packet.getData();;
 
                 DatagramPacket EchoPacket = new DatagramPacket(putmeesage,
                         packet.getLength(),
