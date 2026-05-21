@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="ch">
+<head>
+    <meta charset="UTF-8">
+    <title>信息填写表</title>
+</head>
+<body>
+<table>
+    <thead><h2>请填写简历信息</h2></thead>
+    <tr>
+        <td>
+            <label for = "name">姓名</label>
+        </td>
+        <td><input type="text" id = "name"></td>
+    </tr>
+
+    <tr>
+        <td>
+            <label> 性别 </label>
+        </td>
+        <td>
+            <input type = radio name = "sex" id = man>
+            <label for="man">
+                <img src = image/Man_img.webp width="25" height="25">
+                男</label>
+            <input type = radio name = sex id = woman>
+            <label for = woman>
+                <img src = image/Woman_img.webp width = 25 height="25">女</label>
+        </td>
+    </tr>
+
+    <tr>
+        <td>
+            出生日期
+        </td>
+
+        <td>
+            <select>
+                <option>请选择年</option>
+                <option>2001</option>
+                <option>2002</option>
+                <option>2003</option>
+                <option>2004</option>
+                <option>2005</option>
+            </select>
+
+            <select>
+                <option>请选择月</option>
+                <option>1</option>
+                <option>2</option>
+                <option>3</option>
+                <option>4</option>
+                <option>5</option>
+            </select>
+
+            <select>
+                <option>请选择日</option>
+                <option>1</option>
+                <option>2</option>
+                <option>3</option>
+                <option>4</option>
+                <option>5</option>
+            </select>
+        </td>
+    </tr>
+
+    <tr>
+        <td><label for = school> 就读学校</label></td>
+        <td>
+             <input type="text" id = school>
+        </td>
+    </tr>
+
+    <tr>
+        <td> 应聘岗位 </td>
+        <td>
+            <input type="checkbox" id = Frontend>
+            <label for = Frontend> 前端</label>
+
+            <input type="checkbox" id = Backend>
+            <label for = Backend> 后端</label>
+
+            <input type="checkbox" id = Test>
+            <label for = Test> 测试</label>
+
+            <input type="checkbox" id = Maintain>
+            <label for = Maintain> 运维</label>
+        </td>
+    </tr>
+
+    <tr>
+        <td><label for = Skills> 掌握技能</label></td>
+        <td>
+            <input type="text" id = Skills>
+        </td>
+    </tr>
+
+    <tr>
+        <td><label for = Porject> 项目经历</label></td>
+        <td>
+            <input type="text" id = Porject>
+        </td>
+    </tr>
+
+    <tr>
+        <td></td>
+        <td>
+            <input type="radio" id = Attention>
+            <label for="Attention"> 我已仔细阅读公司要求</label>
+        </td>
+    </tr>
+
+
+    <tr>
+        <td></td>
+
+        <td><a href="#"> 查看我的状态</a></td>
+    </tr>
+
+    <tr>
+        <td></td>
+        <td><h3>请应聘者确认</h3></td>
+    </tr>
+
+    <tr>
+        <td></td>
+        <td>
+            <ul>
+                <li>以上信息真实有效</li>
+                <li>可以尽早去公司实习</li>
+                <li>接受加班</li>
+            </ul>
+        </td>
+
+    </tr>
+
+
+</table>
+</body>
+</html>
