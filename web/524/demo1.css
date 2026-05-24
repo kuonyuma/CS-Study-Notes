@@ -1,0 +1,38 @@
+/* 1. 先用上我们学过的金牌标准，防止盒子被撑大 */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+/* 2. 广告板大盒子 */
+.notice-board {
+    width: 400px;           /* 设置盒子的宽度 */
+    border: 1px solid #ccc; /* 浅灰色的实线外边框（纸箱外壳） */
+    padding: 20px;          /* 内边距：让内容和外边框保持距离 */
+    background-color: #fff; /* 纯白背景 */
+    font-family: sans-serif;/* 设置一个干净的字体 */
+}
+
+/* 3. 标题区域 */
+.title {
+    font-size: 24px;        /* 放大字体 */
+    color: #666;            /* 灰色文字 */
+    font-weight: normal;    /* 稍微把字变细一点，更像图片效果 */
+    padding-bottom: 10px;   /* 标题和下方的虚线保持一点距离 */
+    /* 关键点：用下边框来实现那条浅灰色虚线 */
+    border-bottom: 1px dotted #ccc;
+}
+
+/* 4. 内容列表区域 */
+.content-list {
+    list-style: none;       /* 去掉列表默认的小圆点 */
+    margin-top: 15px;       /* 列表整体和上方虚线保持距离 */
+}
+
+/* 5. 每一行文字 */
+.content-list li {
+    font-size: 16px;
+    color: #888;            /* 调整文字颜色为灰色 */
+    line-height: 2;         /* 行高：让每一行文字之间有舒服的间距 */
+}
