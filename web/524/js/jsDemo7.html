@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+</body>
+<script>
+    // 创建一个对象
+
+    function test(){
+        var object = {}
+
+        var Student = {
+            name: '蔡徐坤',
+            weight:50,
+            height:180,
+            age:10,
+            print: function (name) {
+                console.log("大家好我是："+ name);
+            }
+        }
+
+        console.log(Student.name);
+        console.log(Student['weight']);
+        Student.print("王源")
+    }
+    test();
+
+    //第二种创建对象的方式
+    var ob = new Object();
+    ob.name = "张雪峰老师";
+    console.log(ob["name"])
+
+</script>
+</html>

@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=, user-scalable=, initial-scale=, maximum-scale=, minimum-scale=">
+    <meta http-equiv="X-UA-Compatible" content="ie=">
+    <title></title>
+</head>
+<body>
+
+</body>
+
+<script>
+    // 1. 全局作用域（相当于总公司配置）
+    const systemName = "智能后端系统";
+    const logLevel = "INFO";
+    const backupPath = "/default/backup";
+
+    function traceModule() {
+        // 2. 模块级作用域（相当于订单模块配置）
+        const logLevel = "DEBUG"; // 遮蔽了全局的 INFO
+        const moduleName = "订单模块";
+
+        function executeOrder() {
+            // 3. 方法级作用域（相当于具体下单方法）
+            const backupPath = "/custom/order/backup"; // 遮蔽了全局的备份路径
+
+            console.log("----- 开始打印日志 (触发作用域链查找) -----");
+
+            // 查找路径：当前方法(有) -> 成功
+            console.log("备份路径 -> " + backupPath);
+
+            // 查找路径：当前方法(无) -> 模块作用域(有) -> 成功 (拿到 DEBUG，忽略全局 INFO)
+            console.log("日志级别 -> " + logLevel);
+
+            // 查找路径：当前方法(无) -> 模块作用域(无) -> 全局作用域(有) -> 成功
+            console.log("系统名称 -> " + systemName);
+
+            // 查找路径：当前方法(无) -> 模块作用域(无) -> 全局作用域(无) -> 报错
+            try {
+                console.log("未知变量 -> " + dbPassword);
+            } catch (error) {
+                console.log("【报错提示】查找失败：" + error.message);
+            }
+        }
+
+        executeOrder();
+    }
+
+    traceModule();
+</script>
+</html>

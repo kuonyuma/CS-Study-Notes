@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+</body>
+<script>
+    // 练习函数
+
+    // 第一种写法
+    let a = 1;
+    let b = 2;
+    console.log(add(a,b));
+
+    function add(a,b){
+        let sum = a + b;
+        return sum;
+    }
+    //第二种定义函数的方式
+    let mod = function(a,b){
+        return a-b;
+    }
+    console.log(mod(2,1))
+
+    //第三种写法
+    let add_2 = (a,b) =>{
+        return a + b;
+    }
+
+    console.log(add_2(10,20))
+
+</script>
+</html>
