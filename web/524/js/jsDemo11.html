@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>商品详情Tab栏切换</title>
+    <style>
+
+
+        /* 关键：高亮状态（被选中时） */
+        .tab-item.active {
+            background-color: #c81623; /* 经典京东红 */
+            color: #fff;
+        }
+
+        /* 单个内容面板：默认隐藏 */
+        .content-panel {
+            display: none;
+        }
+
+        /* 关键：显示当前选中的内容 */
+        .content-panel.active {
+            display: block;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="tab-container">
+    <ul class="tab-list">
+        <li class="tab-item active" data-index="0">商品介绍</li>
+        <li class="tab-item" data-index="1">规格与包装</li>
+        <li class="tab-item" data-index="2">售后保障</li>
+        <li class="tab-item" data-index="3">商品评价 (50000)</li>
+        <li class="tab-item" data-index="4">手机社区</li>
+    </ul>
+
+    <div class="tab-content">
+        <div class="content-panel active">商品介绍模块内容</div>
+        <div class="content-panel">规格与包装模块内容 - 这里可以放参数表格</div>
+        <div class="content-panel">售后保障模块内容 - 正品保障，退换无忧</div>
+        <div class="content-panel">商品评价模块内容 - 好评度 99%</div>
+        <div class="content-panel">手机社区模块内容 - 欢迎花粉/米粉/果粉交流</div>
+    </div>
+</div>
+
+<script>
+
+
+    // 为每个标签绑定点击事件
+    // 1. 获取所有标签和面板
+    var tabs = document.querySelectorAll('.tab-item');
+    var panels = document.querySelectorAll('.content-panel');
+
+    // 2. 用最简单的 for 循环给每个标签绑定点击事件
+    for (var i = 0; i < tabs.length; i++) {
+        tabs[i].index = i; // 把当前的序号【存到标签自己身上】（关键点！）
+
+        tabs[i].onclick = function() {
+            // 清除所有人（把所有人的 active 类名都删掉）
+            for (var j = 0; j < tabs.length; j++) {
+                tabs[j].classList.remove('active');
+                panels[j].classList.remove('active');
+            }
+            // 留住我自己（给当前点击的标签和对应的内容加 active）
+            this.classList.add('active');
+            panels[this.index].classList.add('active');
+        };
+    }
+</script>
+
+</body>
+</html>

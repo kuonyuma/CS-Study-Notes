@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div>
+    请点击我
+</div>
+<div>
+    <input type = button value = 我是一个按钮>
+</div>
+
+<div class = t3>
+    <input class = put1 type = text>
+    <input class = put2 type = text>
+</div>
+</body>
+<script>
+    let a = document.querySelector("div");
+     a.onclick = function(){
+        alert("你好");
+    }
+
+    let b = document.querySelector("input")
+    b.onclick = function(){
+         alert("你好呀")
+    }
+
+    let c = document.querySelector(".t3 .put1")
+    c.onkeydown = function(){
+        alert("你已经按一下键盘");
+    }
+
+    let d = document.querySelector(".t3 .put2")
+    d.onkeypress = function(){
+         let buf = event.keyCode;
+         let buf1 = String.fromCharCode(buf);
+        console.log(buf1)
+    }
+
+
+</script>
+</html>

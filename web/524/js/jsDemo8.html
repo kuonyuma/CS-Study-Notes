@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+</body>
+<script>
+    // 使用class关键字创建对象
+
+    class peo{
+        name;
+        weight;
+        height;
+        age;
+        sex;
+
+        constructor(name,weight,height,age,sex){
+            this.name = name;
+            this.weight = weight;
+            this.height = height;
+            this.age = age;
+            this.sex = sex;
+        }
+        say(){
+            console.log(this.name+"正在说")
+        }
+        static school = "清华";
+
+        static print(){
+            alert("你好")
+        }
+    }
+    let min = new peo("小明",170,50,18,"男")
+    console.log(min);
+    min.say();
+    console.log(peo.school);
+    peo.print()
+</script>
+</html>

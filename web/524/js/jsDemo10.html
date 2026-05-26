@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>排他思想 - 表格高亮 Demo</title>
+    <style>
+        /* 基础表格样式 */
+        table {
+            width: 600px;
+            border-collapse: collapse;
+            margin: 50px auto;
+            font-family: Arial, sans-serif;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        th, td {
+            padding: 12px;
+            border: 1px solid #e0e0e0;
+        }
+
+        th {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        /* 核心：高亮样式类（由 JS 动态控制） */
+        tbody tr.ad {
+            background-color: #fff59d !important; /* 使用 !important 确保覆盖掉交替背景色 */
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+<table>
+    <thead>
+    <tr>
+        <th>学号</th>
+        <th>姓名</th>
+        <th>科目</th>
+        <th>成绩</th>
+    </tr>
+    </thead>
+    <tbody id="table-body">
+    <tr>
+        <td>001</td>
+        <td>张三</td>
+        <td>JavaScript</td>
+        <td>95</td>
+    </tr>
+    <tr>
+        <td>002</td>
+        <td>李四</td>
+        <td>HTML5</td>
+        <td>88</td>
+    </tr>
+    <tr>
+        <td>003</td>
+        <td>王五</td>
+        <td>CSS3</td>
+        <td>92</td>
+    </tr>
+    <tr>
+        <td>004</td>
+        <td>赵六</td>
+        <td>Vue.js</td>
+        <td>99</td>
+    </tr>
+    </tbody>
+</table>
+
+<script>
+    // 1. 获取数据行（获取 tbody 里面所有的 tr）
+    const rows = document.querySelectorAll('#table-body tr');
+
+    // 2. 利用循环给每一行绑定鼠标经过事件（mouseover）
+    for (let i = 0; i < rows.length; i++) {
+        rows[i].addEventListener('mouseover', function() {
+
+            // 【核心：排他思想第一步】
+            // 干掉所有人：遍历所有人，移除他们的 highlight 类名
+            for (let j = 0; j < rows.length; j++) {
+                rows[j].classList.remove('ad');
+            }
+
+            // 【核心：排他思想第二步】
+            // 留下我自己：给当前鼠标触碰的这一行加上 highlight 类名
+            this.classList.add('ad');
+        });
+    }
+
+    // // 可选扩展：当鼠标离开整个表格区域时，清除所有高亮（让排他彻底结束）
+    // const tableBody = document.getElementById('table-body');
+    // tableBody.addEventListener('mouseleave', function() {
+    //     for (let i = 0; i < rows.length; i++) {
+    //         rows[i].classList.remove('highlight');
+    //     }
+    // });
+</script>
+
+</body>
+</html>
