@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>Fixed 定位演示</title>
+    <style>
+        body {
+            margin: 0;
+            /* 把网页撑得非常高，强行弄出滚动条 */
+            height: 2000px;
+            background-color: #f7f9fa;
+            font-family: sans-serif;
+            padding-top: 60px; /* 给顶部的导航栏留出空间，防止盖住文字 */
+        }
+
+        /* 1. 顶部固定导航栏 */
+        .navbar {
+            width: 100%;
+            height: 60px;
+            background-color: #e74c3c;
+            color: white;
+            text-align: center;
+            line-height: 60px;
+            font-size: 20px;
+            font-weight: bold;
+
+            /* 核心魔法开始 */
+            position: fixed;
+            top: 0;          /* 钉在屏幕最顶部 */
+            left: 0;         /* 紧贴屏幕左边缘 */
+        }
+
+        /* 2. 右下角固定悬浮按钮 */
+        .float-btn {
+            width: 50px;
+            height: 50px;
+            background-color: #2ecc71;
+            color: white;
+            text-align: center;
+            line-height: 50px;
+            border-radius: 25px; /* 变成圆形 */
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+
+            /* 核心魔法开始 */
+            position: fixed;
+            bottom: 30px;    /* 距离屏幕底部 30px */
+            right: 30px;     /* 距离屏幕右侧 30px */
+        }
+
+        .content {
+            padding: 20px;
+            font-size: 18px;
+            line-height: 2;
+        }
+    </style>
+</head>
+<body>
+
+<div class="navbar">我是固定的顶部导航栏，我不随页面滚动！</div>
+
+<div class="float-btn" onclick="window.scrollTo(0,0)">置顶</div>
+
+<div class="content">
+    <h2>请往下滚动网页 ↓↓↓</h2>
+    <p>这是网页的内容...</p>
+    <p>你会发现，无论你怎么滚动，红色的导航和绿色的按钮都纹丝不动。</p>
+    <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+    <h2>已经滚动了一段距离啦！</h2>
+    <p>看，它们还在原来的屏幕位置！</p>
+</div>
+
+</body>
+</html>

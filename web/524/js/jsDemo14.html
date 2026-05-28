@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div class = tab>
+    <input type="button" value = 播放中>
+</div>
+
+<div class = tab1>
+    <input type="button">
+</div>
+<div class = tab2>
+    <input class = t1 type = "text">
+    <input class = t2 type = "button" value = 点我功德+1>
+</div>
+
+</body>
+    <script>
+        //获取对象
+        let Bean2 = document.querySelector(".tab2 .t1")
+        let Bean3 = document.querySelector(".tab2 .t2")
+
+        Bean3.onclick = ()=>{
+            let buf = parseInt(Bean2.value);
+            Bean2.value = buf + 1;
+            console.log("当前功德" + Bean2.value)
+        }
+
+        // 获取对象
+        let Bean = document.querySelector("input");
+        //定义事件行为
+        Bean.onclick = ()=>{
+            Bean.value === "播放中"? Bean.value = "暂停中":Bean.value = "播放中";
+        }
+
+        // 获取对象
+        let Bean1 = document.querySelector(".tab1 input");
+        //定义事件行为
+        Bean1.onclick = ()=>{
+            if(Bean1.type === "button"){
+                Bean1.type = "text";
+            }else{
+                Bean1.type = "button";
+            }
+        }
+    </script>
+</html>

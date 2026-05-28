@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div class = t1>
+    <input id = "btn1" type = "button" value = "按钮1">
+    <input id = "btn2" type = "button" value = "按钮2">
+    <input id = "btn3" type = "button" value = "按钮3">
+
+</div>
+</body>
+<script>
+    let Bean = document.querySelectorAll(".t1 input")
+
+    // 方法1：使用 addEventListener + removeEventListener（需要保存函数引用）
+    /*
+    let handlers = [];
+    for (let i = 0; i < Bean.length; i++) {
+        let func = function (){
+            console.log("你好"+ i);
+        }
+        handlers.push(func);
+        Bean[i].addEventListener("click", func);
+    }
+    Bean[2].removeEventListener("click", handlers[2])
+    */
+
+    // 方法2：使用 onclick 属性赋值 + null 删除（更简洁）
+    for (let i = 0; i < Bean.length; i++) {
+        Bean[i].onclick = function(){
+            console.log("你好"+ i);
+        }
+    }
+    // 删除按钮3的事件 - 只需赋值 null
+    Bean[2].onclick = null;
+
+    let BeanMove = document.querySelector("body");
+    document.addEventListener('mousemove', function(e) {
+        console.log("X坐标："+ e.clientX);
+        console.log("Y坐标"+ e.clientY);
+
+    });
+
+
+</script>
+</html>

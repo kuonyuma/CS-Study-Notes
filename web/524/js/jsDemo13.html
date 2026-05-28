@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>修改元素属性</title>
+</head>
+
+<body>
+<div id = ryuke>
+    <img src = "../img/Re0_amylia.png" alt ="这是一张图片" width= 400px >
+    s<br>
+    这是艾米利亚。
+</div>
+
+<div class = kyuongyua>
+    <select>
+        <option>1</option>
+        <option>1</option>
+        <option>1</option>
+        <option>1</option>
+        <option>1</option>
+        <option>1</option>
+
+    </select>
+</div>
+</body>
+<Script>
+    //获取对象
+    let Bean = document.querySelectorAll("img");
+    //打印对象的属性
+    console.dir(Bean);
+    //修改元素属性
+    Bean.alt = "这是艾米利亚";
+    //重新打印
+    console.dir(Bean)
+</Script>
+</html>

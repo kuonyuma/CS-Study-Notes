@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>猜数字游戏</title>
+    <style>
+        /* 稍微加一点间距，让界面更好看 */
+        .game-container div {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="game-container">
+    <h2>预期效果</h2>
+
+    <div>
+        <button id="restart-btn">重新开始一局游戏</button>
+    </div>
+
+    <div>
+        <span>请输入要猜的数字：</span>
+        <input type="number" id="guess-input">
+        <button id="guess-btn">猜</button>
+    </div>
+
+    <div>
+        <p>已经猜的次数：<span id="guess-count">0</span></p>
+        <p>结果：<span id="result-text"></span></p>
+    </div>
+</div>
+
+<script>
+    // 1. 抓取所有需要的 DOM 元素
+    let restartBtn = document.querySelector("#restart-btn");
+    let guessInput = document.querySelector("#guess-input");
+    let guessBtn = document.querySelector("#guess-btn");
+    let countDisplay = document.querySelector("#guess-count");
+    let resultText = document.querySelector("#result-text");
+
+    // 2. 初始化游戏状态变量
+    // Math.random() 生成 0~1 的小数，乘以 100 取整加 1，得到 1~100 的随机整数
+    let targetNumber = Math.floor(Math.random() * 100) + 1;
+    let guessCount = 0;
+
+    // 3. 为“猜”按钮绑定点击事件
+    guessBtn.addEventListener("click", function() {
+        // 获取用户输入的值，并转换为整数
+        let userGuess = parseInt(guessInput.value);
+
+        // 容错处理：如果用户没输入就点猜测
+        if (isNaN(userGuess)) {
+            resultText.textContent = "请输入一个有效的数字哦！";
+            return; // 提前结束函数
+        }
+
+        // 每次点击，猜测次数 +1，并更新到页面上
+        guessCount++;
+        countDisplay.textContent = guessCount;
+
+        // 核心逻辑：比较大小并给出反馈
+        if (userGuess === targetNumber) {
+            resultText.textContent = "恭喜你，猜对了！";
+            resultText.style.color = "green"; // 顺便学个给节点改样式的操作
+        } else if (userGuess > targetNumber) {
+            resultText.textContent = "猜大了！";
+            resultText.style.color = "red";
+        } else {
+            resultText.textContent = "猜小了！";
+            resultText.style.color = "red";
+        }
+    });
+
+    // 4. 为“重新开始”按钮绑定点击事件
+    restartBtn.addEventListener("click", function() {
+        // 重新生成随机数
+        targetNumber = Math.floor(Math.random() * 100) + 1;
+        // 重置次数
+        guessCount = 0;
+        countDisplay.textContent = guessCount;
+        // 清空输入框和结果提示
+        guessInput.value = "";
+        resultText.textContent = "";
+    });
+</script>
+
+</body>
+</html>

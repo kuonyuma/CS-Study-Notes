@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>修改元素内容</title>
+</head>
+<body>
+
+    <div class = t1>
+        hello javascript
+    </div>
+
+    <div class = t2>
+      <strong>  hello css</strong>
+    </div>
+
+</body>
+
+<Script>
+    // // 获取
+    // let boxBean = document.querySelector(".div");
+    // //读取
+    // let text = boxBean.innerText;
+    // //打印
+    // console.log(text);
+    // alert(text);
+    //
+    // boxBean.innerText = "hello html"
+
+    //获取
+    let t2Bean = document.querySelector(".t2");
+    //读取
+    let buf2 = t2Bean.innerHTML;
+    //打印
+    console.log(buf2)
+    //更改
+    t2Bean.innerHTML = "<h1>这是一个标题</h1>";
+</Script>
+</html>

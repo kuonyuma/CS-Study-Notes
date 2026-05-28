@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div class = "father">
+    <div class = s1> 子节点1</div>
+    <div class = s2> 子节点2</div>
+    <div class = s3> 子节点3</div>
+
+</div>
+</body>
+<script>
+    //创建一个节点
+    let node = document.createElement("div");
+    //为节点增加内容
+    node.textContent = "正在注入内容";
+    //增加类名
+    node.classList.add("tile");
+    //获取父节点
+    let father = document.querySelector(".father");
+    //使用appendChild插入
+    father.appendChild(node);
+    //prepend
+    father.prepend(node);
+    //精准插入 - 插入到 s2 之前
+    let s2 = document.querySelector(".s2");
+    father.insertBefore(node, s2);
+
+    node.remove();
+</script>
+</html>

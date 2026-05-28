@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div class = demo>
+
+    <input type ="checkbox" id = all>全都要<br>
+    <input type ="checkbox" class = girl>貂蝉<br>
+    <input type ="checkbox" class = girl>王昭君<br>
+    <input type ="checkbox" class = girl>西施<br>
+    <input type ="checkbox" class = girl>杨玉环<br>
+</div>
+</body>
+    <script>
+        //获取对象
+        let Bean = document.querySelector("#all");
+        let Bean1 = document.querySelectorAll(".girl");
+
+        Bean.onclick = ()=>{
+          for(let i = 0;i < Bean1.length;i++){
+              Bean1[i].checked = Bean.checked;
+          }
+        }
+
+        // 为每个女性角色添加点击事件
+        for(let i = 0; i < Bean1.length; i++){
+            Bean1[i].onclick = ()=>{
+                Bean.checked = run(Bean1);
+            }
+        }
+
+        //判断是否所有选项都被勾选
+        function run(Bean1){
+            for(let i = 0;i < Bean1.length;i++){
+                if(!Bean1[i].checked){
+                    return false;
+                }
+            }
+            return true;
+        }
+    </script>
+</html>

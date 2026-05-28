@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div>
+    <div>
+        <h2>猜数字小游戏</h2>
+        <input type = button value = 重新开始游戏 id = reload>
+    </div>
+
+    <div>
+        请输入数字：
+        <input type = text id = gussNum>
+        <input type = button id = gussUser value = 猜>
+    </div>
+
+    <div>
+        <p>已经猜的次数：<span id="guessCount">0</span></p>
+        <p>结果：<span id="resultText"></span></p>
+    </div>
+</div>
+
+</body>
+<script>
+    //生成随机数:1-100
+    let target = Math.floor(Math.random()*100 + 1);
+    let Count = 0;
+
+    //获取对象
+    let gussNum = document.getElementById("gussNum");
+    let gussUser = document.getElementById("gussUser");
+    let resultText = document.getElementById("resultText");
+    let guessCount = document.getElementById("guessCount");
+    let reloadGame = document.getElementById("reload");
+
+    //定义事件
+    gussUser.addEventListener("click",()=> {
+
+        let num = parseInt(gussNum.value);
+
+        if (isNaN(num)) {
+            resultText.innerHTML = "请注意参数合法性"
+            return;
+        }
+
+        Count++;
+        guessCount.innerHTML = Count;
+
+        if(num > target){
+            resultText.innerHTML = "猜大了";
+        }else if(num < target){
+            resultText.innerHTML = "猜小了";
+        }else{
+         resultText.innerHTML = "猜对了";
+        }
+    });
+
+    //重置游戏
+
+    reloadGame.addEventListener("click",()=>{
+        target = Math.floor(Math.random()*100 + 1);
+        Count = 0;
+
+        guessCount.innerHTML = Count;
+        gussNum.value = "";
+        resultText.innerHTML = "";
+
+    })
+
+
+
+
+</script>
+</html>
