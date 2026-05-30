@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <div class = "mainBox">
+        <div class= "header">
+            <h2>请输入验证码</h2>
+        </div>
+
+        <div class = "main">
+            <input id = "userCode"  type = text>
+            <img id = "imgID" src ="/getCode/get" alt = "验证码图片">
+            <input id = "submit" type = button value="提交">
+        </div>
+        <div>
+            <a id = "repetition" href = "#"> 看不清？换一张</a>
+            <p> 结果：</p>
+            <p id = "hint">... </p>
+        </div>
+    </div>
+</body>
+<script>
+    //获取对象
+    let submit = document.getElementById("submit");
+    let userCode = document.getElementById("userCode");
+    let hint = document.getElementById("hint");
+    let repetition = document.getElementById("repetition");
+    let imdID = document.getElementById("imgID");
+
+    //完成submit事件
+    submit.addEventListener("click",async ()=>{
+            //判断
+            let userInput = document.getElementById("userCode").value;
+            let response = await fetch("/checkCode/check?userinsert=" + userInput);
+            let result = await response.text();
+
+            if (result === "true") {
+                hint.innerHTML = "正确";
+            } else {
+                hint.innerHTML = "错误";
+            }
+    })
+
+    //完成验证码重新刷新
+    repetition.addEventListener("click",()=>{
+        imdID.src = "/getCode/get?t="+ new Date().getTime();
+        userCode.value = "";
+        hint.innerHTML = "...";
+    })
+
+</script>
+</html>
