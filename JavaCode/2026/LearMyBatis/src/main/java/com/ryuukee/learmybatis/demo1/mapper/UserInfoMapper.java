@@ -1,6 +1,6 @@
-package com.ryuukee.learmybatis.mapper;
+package com.ryuukee.learmybatis.demo1.mapper;
 
-import com.ryuukee.learmybatis.model.UserInfo;
+import com.ryuukee.learmybatis.demo1.model.UserInfo;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;

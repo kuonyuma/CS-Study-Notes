@@ -1,11 +1,9 @@
-package com.ryuukee.learmybatis.model;
+package com.ryuukee.mybatistest;
 
 import lombok.Data;
 
-import java.util.Date;
+import java.sql.Date;
 
-// @Data 注解是 Lombok 提供的神兵利器！
-// 加上它，你就不需要手动去写那些长长的 get()、set() 和 toString() 方法了，它在编译时会自动帮你生成。
 @Data
 public class UserInfo {
     private Integer id;

@@ -1,4 +1,4 @@
-package com.ryuukee.learmybatis;
+package com.ryuukee.learmybatis.demo2;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ryuukee.mybatistest.UserInfoMapper">
+
+    <select id="SelectAll" resultType="com.ryuukee.mybatistest.UserInfo">
+        select * from user_info
+    </select>
+
+    <insert id="insert">
+        insert into user_info(username, password, age, gender)
+        values (#{username}, #{password}, #{age}, #{gender})
+    </insert>
+
+    <update id="update">
+        update user_info set username = #{username},password= #{password},age=#{age} where id=#{id}
+    </update>
+    <delete id="delete">
+        delete from user_info where id = #{id}
+    </delete>
+
+
+
+</mapper>

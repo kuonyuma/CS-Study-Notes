@@ -5,8 +5,9 @@ spring:
     password: 123456789
     driver-class-name: com.mysql.cj.jdbc.Driver
 
-MyBatis:
+mybatis:
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
     map-underscore-to-camel-case: true
+  mapper-locations: classpath:**/*Mapper.xml
     

@@ -1,14 +1,15 @@
 package com.ryuukee.learmybatis;
 
 
-import com.ryuukee.learmybatis.mapper.UserInfoMapper;
-import com.ryuukee.learmybatis.model.UserInfo;
+import com.ryuukee.learmybatis.demo1.LearMyBatisApplication;
+import com.ryuukee.learmybatis.demo1.mapper.UserInfoMapper;
+import com.ryuukee.learmybatis.demo1.model.UserInfo;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import java.util.List;
 
-@SpringBootTest
+@SpringBootTest(classes = LearMyBatisApplication.class)
 class LearnMyBatisApplicationTests {
 
     // 自动注入我们刚刚写好的提货单（Mapper接口）

@@ -1,6 +1,6 @@
-package com.ryuukee.learmybatis;
+package com.ryuukee.learmybatis.demo1;
 
-import com.ryuukee.learmybatis.model.UserInfo;
+import com.ryuukee.learmybatis.demo1.model.UserInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
