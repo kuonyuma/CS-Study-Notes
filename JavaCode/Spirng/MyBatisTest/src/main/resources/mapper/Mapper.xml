@@ -8,9 +8,61 @@
         select * from user_info
     </select>
 
+    <select id="selectByCondition" resultType="com.ryuukee.mybatistest.UserInfo">
+        select * from user_info
+        <where>
+            <if test="id != null">
+                and id = #{id}
+            </if>
+            <if test="username != null">
+                and username = #{username}
+            </if>
+
+            <if test="gender != null">
+                and gender = #{gender}
+            </if>
+        </where>
+    </select>
+
     <insert id="insert">
         insert into user_info(username, password, age, gender)
         values (#{username}, #{password}, #{age}, #{gender})
+    </insert>
+
+    <insert id="insert2">
+        insert into user_info(username,password,age
+        <if test="gender != null">
+        ,gender
+        </if>)
+        values(#{username},#{password},#{age}
+        <if test=" gender != null">
+        ,#{gender})
+        </if>)
+    </insert>
+
+    <insert id="insert3">
+        insert into user_info
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+            username,
+            password
+                <if test="age != null">
+                    ,age
+                </if>
+                <if test="gender != null">
+                    ,gender
+                </if>
+            </trim>
+        values
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                #{username},
+                #{password}
+                <if test="age != null">
+                    ,#{age}
+                </if>
+                <if test="gender != null">
+                    ,#{gender}
+                </if>
+            </trim>
     </insert>
 
     <update id="update">

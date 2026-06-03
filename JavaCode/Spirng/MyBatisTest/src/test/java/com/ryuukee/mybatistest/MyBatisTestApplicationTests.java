@@ -24,6 +24,17 @@ class MyBatisTestApplicationTests {
             System.out.println(e);
         }
     }
+    @Test
+    void selectByCondition(){
+        UserInfo bean = new UserInfo();
+//        bean.setUsername("zhangsan");
+        bean.setGender(1);
+        List<UserInfo> userInfos = userInfoMapper.selectByCondition(bean);
+        System.out.println("===============================");
+        for (UserInfo e :userInfos)
+            System.out.println(e);
+        System.out.println("=====================================");
+    }
 
     @Test
     void insert(){
@@ -44,6 +55,27 @@ class MyBatisTestApplicationTests {
     @Test
     void delete(){
          userInfoMapper.delete(1);
+    }
+
+    @Test
+    void insert2() {
+        UserInfo bean = new UserInfo();
+        bean.setUsername("username18");
+        bean.setPassword("pass18");
+        bean.setAge(20);
+//        bean.setGender(1);
+
+        userInfoMapper.insert2(bean);
+    }
+    @Test
+    void insert3() {
+        UserInfo bean = new UserInfo();
+        bean.setUsername("username18");
+        bean.setPassword("pass18");
+        bean.setAge(20);
+        bean.setGender(1);
+
+        userInfoMapper.insert3(bean);
     }
 
 }

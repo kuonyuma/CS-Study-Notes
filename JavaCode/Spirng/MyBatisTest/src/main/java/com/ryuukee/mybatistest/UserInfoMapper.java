@@ -15,4 +15,13 @@ public interface UserInfoMapper {
 
     //删除数据
     Integer delete(Integer id);
+
+    //练习动态sql
+    Integer insert2(UserInfo bean);
+
+    //练习trim
+    Integer insert3(UserInfo bean);
+
+    //练习where
+    List<UserInfo> selectByCondition(UserInfo bean);
 }
