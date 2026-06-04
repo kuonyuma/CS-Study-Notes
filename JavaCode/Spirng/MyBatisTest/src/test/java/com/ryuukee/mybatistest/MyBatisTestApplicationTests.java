@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @SpringBootTest
@@ -76,6 +77,37 @@ class MyBatisTestApplicationTests {
         bean.setGender(1);
 
         userInfoMapper.insert3(bean);
+    }
+    @Test
+    void uodate2() {
+        UserInfo bean = new UserInfo();
+        bean.setUsername("Ryuukee");
+        bean.setPassword("p131231221");
+        bean.setAge(20);
+
+        userInfoMapper.update2(3,bean);
+    }
+
+    @Test
+    void select2(){
+        List<Integer> array = new ArrayList<>();
+        for (int i = 0; i < 5; i++) {
+            array.add(i);
+        }
+        userInfoMapper.select2(array);
+    }
+    @Test
+    void insert4(){
+        List<UserInfo> list = new ArrayList<>();
+        for (int i = 0; i < 20; i++) {
+            UserInfo bean = new UserInfo();
+            bean.setUsername("username" + i);
+            bean.setPassword("psss"+i);
+            bean.setAge(i+5);
+            bean.setGender(i % 2 == 0?1:0);
+            list.add(bean);
+        }
+        userInfoMapper.insert4(list);
     }
 
 }

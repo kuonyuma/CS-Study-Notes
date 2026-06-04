@@ -4,8 +4,12 @@
 
 <mapper namespace="com.ryuukee.mybatistest.UserInfoMapper">
 
-    <select id="SelectAll" resultType="com.ryuukee.mybatistest.UserInfo">
+    <sql id="userSelect">
         select * from user_info
+    </sql>
+
+    <select id="SelectAll" resultType="com.ryuukee.mybatistest.UserInfo">
+        <include refid="userSelect"/>
     </select>
 
     <select id="selectByCondition" resultType="com.ryuukee.mybatistest.UserInfo">
@@ -24,9 +28,28 @@
         </where>
     </select>
 
+    <select id="select2" resultType="com.ryuukee.mybatistest.UserInfo">
+        select * from user_info where id in
+        <foreach collection="idList" open="(" separator="," close=")" item="id">
+            #{id}
+        </foreach>
+    </select>
+
+    <select id="select5" resultType="com.ryuukee.mybatistest.UserInfo">
+
+    </select>
+
     <insert id="insert">
         insert into user_info(username, password, age, gender)
         values (#{username}, #{password}, #{age}, #{gender})
+    </insert>
+
+    <insert id="insert4">
+        insert into user_info(username,password,age,gender)
+        values
+            <foreach collection="uInfos" separator="," item="e">
+                (#{e.username},#{e.password},#{e.age},#{e.gender})
+            </foreach>
     </insert>
 
     <insert id="insert2">
@@ -68,9 +91,27 @@
     <update id="update">
         update user_info set username = #{username},password= #{password},age=#{age} where id=#{id}
     </update>
+
+    <update id="update2">
+        update user_info
+        <set>
+            <if test="bean.username != null">
+                username = #{bean.username},
+            </if>
+            <if test="bean.password != null">
+                password = #{bean.password},
+            </if>
+            <if test="bean.age != null">
+                age = #{bean.age},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
     <delete id="delete">
         delete from user_info where id = #{id}
     </delete>
+
+
 
 
 
