@@ -1,6 +1,9 @@
 package com.ryuukee.mybatistest;
 import org.junit.jupiter.api.Test;
 
+import java.util.Comparator;
+import java.util.PriorityQueue;
+
 class TestClass {
 
     @Test
@@ -17,7 +20,8 @@ class TestClass {
 
         System.out.println(num5);
         System.out.println(num6);
-
+        //PriorityQueue
+        Comparator
     }
 }
 
