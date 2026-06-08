@@ -20,8 +20,7 @@ class TestClass {
 
         System.out.println(num5);
         System.out.println(num6);
-        //PriorityQueue
-        Comparator
+
     }
 }
 
