@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>我的第一个 Flexbox 满屏网页</title>
+    <style>
+        .father {
+            position: relative; /* 💡 我是靠山！ */
+            width: 500px;
+            height: 500px;
+            background-color: lightblue;
+        }
+
+        .son {
+            position: absolute; /* 💡 我飞起来了！ */
+            top: 10px;          /* 距离老爸的顶部 10 像素 */
+            right: 10px;        /* 距离老爸的右边 10 像素 */
+
+            width: 100px;
+            height: 100px;
+            background-color: coral;
+        }
+    </style>
+</head>
+<body>
+
+<div class="father">
+    我是老爸（在地面正常排队）
+    <div class="son">我是绝对定位的儿子（飞起来了）</div>
+</div>
+
+</body>
+</html>

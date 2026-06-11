@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<style>
+    body{
+        display:flex;
+        flex-direction:column;
+        align-items:center;
+        min-height:100vh;
+        background-color:#1a1a2e;
+        /*font-family:Arial,sans-serif;*/
+    }
+
+    .slider{
+        position: relative;
+        width:640px;
+        height:360px;
+    }
+
+    .slide{
+        position:absolute;
+        width:100%;
+        height:100%;
+        opacity:0;
+        transition: opacity 0.5s;
+    }
+
+    .buttons{
+        margin-top:20px;
+        display:flex;
+        gap:20px;
+    }
+
+    button {
+        padding:10px 30px;
+        font-size:1rem;
+        border:none;
+        border-radius:8px;
+        background-color: #4a90e2;
+        color:#ffffff;
+        cursor:pointer;
+    }
+    button:hover{
+        background-color: #fe49ff;
+    }
+    /* 你缺少这一段！ */
+    .slide.active {
+        opacity: 1;
+    }
+    /* 你缺少这一段！ */
+    .slide img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+</style>
+<body>
+
+<!-- 图片容器 -->
+<div class="slider" id="slider">
+    <div class="slide active"><img src="https://picsum.photos/seed/mountain/640/360" alt="山脉"></div>
+    <div class="slide"><img src="https://picsum.photos/seed/ocean/640/360" alt="海洋"></div>
+    <div class="slide"><img src="https://picsum.photos/seed/forest/640/360" alt="森林"></div>
+    <div class="slide"><img src="https://picsum.photos/seed/city/640/360" alt="城市"></div>
+    <div class="slide"><img src="https://picsum.photos/seed/desert/640/360" alt="沙漠"></div>
+</div>
+
+<!-- 切换按钮 -->
+<div class="buttons">
+    <button onclick="prev()">← 上一张</button>
+    <button onclick="next()">下一张 →</button>
+</div>
+</body>
+<script>
+    let slides = document.querySelectorAll(".slide");
+    let current = 0;
+
+    function goTo(index){
+        slides[current].classList.remove('active');
+        current = (slides.length + index) % slides.length;
+        slides[current].classList.add('active');
+    }
+
+    function prev(){
+        goTo(current - 1);
+    }
+
+    function next(){
+        goTo(current + 1);
+    }
+</script>
+</html>

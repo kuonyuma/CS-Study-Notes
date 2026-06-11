@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <title>图片切换效果</title>
+  <style>
+    body {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      background: #1a1a2e;
+      font-family: Arial, sans-serif;
+    }
+
+    /* 图片容器：相对定位，作为图片的参照框 */
+    .slider {
+      position: relative;
+      width: 640px;
+      height: 360px;
+    }
+
+    /* 所有图片叠放在同一位置，默认隐藏 */
+    .slide {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      transition: opacity 0.5s;   /* 淡入淡出动画 */
+    }
+
+    /* 当前图片：显示 */
+    .slide.active {
+      opacity: 1;
+    }
+
+    .slide img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 12px;
+    }
+
+    /* 按钮区域 */
+    .buttons {
+      margin-top: 20px;
+      display: flex;
+      gap: 20px;
+    }
+
+    button {
+      padding: 10px 30px;
+      font-size: 1rem;
+      border: none;
+      border-radius: 8px;
+      background: #4a90e2;
+      color: #fff;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #357abd;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 图片容器 -->
+  <div class="slider" id="slider">
+    <div class="slide active"><img src="https://picsum.photos/seed/mountain/640/360" alt="山脉"></div>
+    <div class="slide"><img src="https://picsum.photos/seed/ocean/640/360" alt="海洋"></div>
+    <div class="slide"><img src="https://picsum.photos/seed/forest/640/360" alt="森林"></div>
+    <div class="slide"><img src="https://picsum.photos/seed/city/640/360" alt="城市"></div>
+    <div class="slide"><img src="https://picsum.photos/seed/desert/640/360" alt="沙漠"></div>
+  </div>
+
+  <!-- 切换按钮 -->
+  <div class="buttons">
+    <button onclick="prev()">← 上一张</button>
+    <button onclick="next()">下一张 →</button>
+  </div>
+
+</body>
+<script>
+  // 获取所有幻灯片
+  const slides = document.querySelectorAll('.slide');
+  let current = 0; // 当前图片的索引
+
+  // 切换到指定索引的图片
+  function goTo(index) {
+    slides[current].classList.remove('active'); // 隐藏当前图片
+    current = (index + slides.length) % slides.length; // 计算新索引（循环）
+    slides[current].classList.add('active');    // 显示新图片
+  }
+  function prev() { goTo(current - 1); } // 上一张
+  function next() { goTo(current + 1); } // 下一张
+</script>
+
+</html>
