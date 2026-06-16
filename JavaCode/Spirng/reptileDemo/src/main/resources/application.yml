@@ -1,0 +1,24 @@
+spring:
+  application:
+    name: reptileDemo
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/reptile_db?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai
+    username: root
+    password: ${DB_PASSWORD:123456789}
+
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  configuration:
+    map-underscore-to-camel-case: true
+# 知乎爬虫专属配置
+zhihu:
+  cookie: ${ZHIHU_COOKIE:}
+  # 搜索 API 基础地址（不含关键词）
+  base-search-url: "https://www.zhihu.com/api/v4/search_v3?gk_version=gz-gaokao&t=general&correction=1&offset=0&limit=20&filter_fields=&lc_idx=0&show_all_topics=0&search_source=Normal&q="
+  # 保留原完整搜索 URL（测试类使用）
+  search-url: "https://www.zhihu.com/api/v4/search_v3?gk_version=gz-gaokao&t=general&q=%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%B0%B1%E4%B8%9A%E6%83%85%E5%86%B5&correction=1&offset=0&limit=20&filter_fields=&lc_idx=0&show_all_topics=0&search_source=Normal"
+  # 想监控哪些关键词就写哪些，用逗号分隔
+  keywords: "计算机就业情况,2025 程序员 薪资 中位数 报告,互联网行业 取消年终奖,腾讯阿里字节美团 校招 HC 变化,大厂 社招 缩减,秋招春招 投递录取比 2026,2025 互联网 行业人才流动 报告,IT行业 招聘需求,程序员 远程工作,出海 互联网 招聘,外企 研发中心 扩招,独立开发者 变现 月入,程序员 兼职 接单"
+  # 抓取间隔（毫秒），3600000 = 1小时
+  crawl-delay: 3600000
