@@ -16,6 +16,8 @@ zhihu:
   cookie: ${ZHIHU_COOKIE:}
   # 搜索 API 基础地址（不含关键词）
   base-search-url: "https://www.zhihu.com/api/v4/search_v3?gk_version=gz-gaokao&t=general&correction=1&offset=0&limit=20&filter_fields=&lc_idx=0&show_all_topics=0&search_source=Normal&q="
+  # 热榜 公开api
+  hotsearch-url: "https://www.zhihu.com/api/v4/search/hot_search"
   # 保留原完整搜索 URL（测试类使用）
   search-url: "https://www.zhihu.com/api/v4/search_v3?gk_version=gz-gaokao&t=general&q=%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%B0%B1%E4%B8%9A%E6%83%85%E5%86%B5&correction=1&offset=0&limit=20&filter_fields=&lc_idx=0&show_all_topics=0&search_source=Normal"
   # 想监控哪些关键词就写哪些，用逗号分隔

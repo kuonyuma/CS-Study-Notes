@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>跟随鼠标移动弹窗表单</title>
+    <style>
+        dialog {
+            position: absolute;
+            margin: 0;
+            left: 100px;
+            top: 100px;
+        }
+        .header {
+            cursor: move;
+            user-select: none;
+        }
+    </style>
+</head>
+
+<body>
+
+    <button id="open">弹出表单</button>
+    <dialog id="box">
+        <div class="header">表单窗口</div>
+        <p>用户名：<input type="text" id="user"></p>
+        <p>密码：<input type="password" id="pass"></p>
+        <button id="close">关闭</button>
+    </dialog>
+
+    <script>
+        let openBtn = document.getElementById('open');
+        let box = document.getElementById('box');
+        let closeBtn = document.getElementById('close');
+        let header = document.querySelector('.header');
+
+        // 打开弹窗
+        openBtn.onclick = function () {
+            box.show();
+        }
+
+        // 关闭弹窗
+        closeBtn.onclick = function () {
+            box.close();
+        }
+
+        // 拖拽弹窗（跟随鼠标移动）
+        header.onmousedown = function (e) {
+            let shiftX = e.clientX - box.offsetLeft;
+            let shiftY = e.clientY - box.offsetTop;
+
+            function onMouseMove(e) {
+                box.style.left = (e.clientX - shiftX) + 'px';
+                box.style.top = (e.clientY - shiftY) + 'px';
+            }
+
+            document.addEventListener('mousemove', onMouseMove);
+
+            document.onmouseup = function () {
+                document.removeEventListener('mousemove', onMouseMove);
+                document.onmouseup = null;
+            };
+        };
+
+        header.ondragstart = function () {
+            return false;
+        };
+    </script>
+</body>
+
+</html>
