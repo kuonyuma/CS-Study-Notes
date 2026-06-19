@@ -8,4 +8,9 @@
         VALUES (#{title}, #{content})
     </insert>
 
+    <insert id="insertHotSearch" parameterType="com.ryuukee.reptiledemo.entity.ZhihuHot">
+    insert into zhihu_hot(query,hot_show)
+    values (#{query},#{hot_show})
+    </insert>
+
 </mapper>

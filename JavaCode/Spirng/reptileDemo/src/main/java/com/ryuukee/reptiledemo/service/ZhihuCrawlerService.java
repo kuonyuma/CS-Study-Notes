@@ -19,7 +19,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
-@Service
+//@Service
 public class ZhihuCrawlerService {
 
     @Autowired
@@ -81,6 +81,7 @@ public class ZhihuCrawlerService {
 
     /**
      * 根据关键词抓取知乎文章并存入数据库
+     * 
      * @param keyword 搜索关键词
      * @return 成功保存的文章数量
      */
@@ -91,7 +92,8 @@ public class ZhihuCrawlerService {
 
         // 请求搜索 API
         String jsonStr = Jsoup.connect(searchUrl)
-                .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36")
+                .userAgent(
+                        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36")
                 .header("Cookie", myCookie)
                 .ignoreContentType(true)
                 .timeout(10000)

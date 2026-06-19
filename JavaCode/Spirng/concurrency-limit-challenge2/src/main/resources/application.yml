@@ -1,0 +1,15 @@
+spring:
+  application:
+    name: concurrency-limit-challenge2
+  datasource:
+    url: jdbc:mysql://localhost:3306/concurrency_challenge?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true&useSSL=false
+    username: root
+    password: 123456789
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  sql:
+    init:
+      mode: always
+
+mybatis:
+  configuration:
+    map-underscore-to-camel-case: true

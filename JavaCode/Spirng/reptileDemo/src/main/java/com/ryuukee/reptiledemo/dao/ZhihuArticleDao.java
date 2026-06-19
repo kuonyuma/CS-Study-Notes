@@ -1,6 +1,7 @@
 package com.ryuukee.reptiledemo.dao;
 
 import com.ryuukee.reptiledemo.entity.ZhihuArticle;
+import com.ryuukee.reptiledemo.entity.ZhihuHot;
 import com.ryuukee.reptiledemo.mapper.ZhihuArticleMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -19,4 +20,9 @@ public class ZhihuArticleDao {
     public int insertArticle(ZhihuArticle article) {
         return zhihuArticleMapper.insertArticle(article);
     }
+
+    public int insertHotSearch(ZhihuHot bean){
+        return zhihuArticleMapper.insertHotSearch(bean);
+    }
+
 }
