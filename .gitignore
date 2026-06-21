@@ -50,3 +50,8 @@ Thumbs.db
 ehthumbs.db
 Desktop.ini
 .DS_Store
+
+
+.angets/
+# 或者如果是常见的拼写：
+.agents/
