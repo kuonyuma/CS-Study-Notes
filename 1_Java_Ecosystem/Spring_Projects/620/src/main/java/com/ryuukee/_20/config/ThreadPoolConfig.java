@@ -24,9 +24,10 @@ public class ThreadPoolConfig {
             TimeUnit.SECONDS,//单位时间
             new LinkedBlockingDeque<>(queueCapacity),//阻塞队列
             new ThreadFactory() {//线程工厂
-                private final AtomicInteger threadNumber = new AtomicInteger(1);
+                private final AtomicInteger threadNumber = new AtomicInteger();
                 @Override
                 public Thread newThread(Runnable r) {
+                    threadNumber.incrementAndGet();
                     Thread t = new Thread(r,"线程代号"+ threadNumber);
                     t.setDaemon(true);//设置为后台线程
                     return t;
