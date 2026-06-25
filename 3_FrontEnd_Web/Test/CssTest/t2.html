@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        .box1 {
+            width: 100px;
+            height: 100px;
+            background-color: red;
+            float: right; /* 🌟 关键：盒子1向左浮动 */
+
+        }
+
+        .box2 {
+            width: 100px;
+            height: 100px;
+            background-color: blue;
+            float: right /* 保持标准流，不浮动 */
+        }
+
+
+        .span1 {
+            float: right;
+            width: 400px;
+            height: 400px;
+            background-color: red;
+            border: 1px solid blueviolet;
+            margin-right: 100px;
+            margin-top: 20px;
+        }
+
+        .span2 {
+            width: 100px;
+            height: 100px;
+            background-color: skyblue;
+            border: 1px solid blue;
+        }
+
+        .father {
+            overflow: hidden;
+            width: 100px;
+            height: 100px;
+            border: solid;
+            background-color: blueviolet;
+        }
+
+        .box3 {
+            border: solid;
+            height: 200px;
+            width: 2000px;
+            background-color: aquamarine;
+        }
+
+    </style>
+</head>
+<body>
+<div class="father">
+    <div class="box3">
+        这是一个盒子
+    </div>
+</div>
+<!-- HTML 结构 -->
+<div class="box1">盒子 1 (准备浮动)</div>
+<div class="box2">盒子 2 (保持标准流)</div>
+<span class="span1"> 这是span标签1</span>
+<span class="span2"> 这是span标签2</span>
+
+</body>
+</html>

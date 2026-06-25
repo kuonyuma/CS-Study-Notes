@@ -11,7 +11,8 @@ public class demo1 {
         //t1();
         //t3();
 
-        t6();
+        t7();
+
     }
 
     private static void t1(){
@@ -81,8 +82,17 @@ public class demo1 {
             return "默认值";
         });
         System.out.println(result);
-
     }
+
+    private static void t7(){
+        User u1 = new User("zhangsan",30);
+        User u2 = null;
+        Optional.ofNullable(u1)
+            .ifPresent(u-> System.out.println("姓名是:" + u.getName()));
+        Optional.ofNullable(u2)
+            .ifPresent(u-> System.out.println(u.getName()));
+    }
+
 
     private static String testOrElse(){
         System.out.println("orElse被执行了");

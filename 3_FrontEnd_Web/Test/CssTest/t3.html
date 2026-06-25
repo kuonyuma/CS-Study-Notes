@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        .box {
+            width: 100px;
+            height: 50px;
+        }
+
+        /* 相对定位：以自己原位置为基准移动 */
+        .relative-box {
+            position: relative;
+            top: 20px; /* 往下走 20px */
+            left: 20px; /* 往右走 20px */
+            background-color: lightgreen;
+        }
+
+        /* 绝对定位：因为父级没定位，以可视窗口/body为基准移动 */
+        .absolute-box {
+            position: fixed;
+
+            background-color: lightcoral;
+            bottom: 20px;
+            left: 20px;
+        }
+
+        /* 普通盒子 3：因为绝对定位 2 脱标了，盒子 3 会顶上去挨着相对定位 1 的原本位置 */
+        .normal-box {
+            background-color: lightgray;
+        }
+
+        .back-to-top {
+            position: fixed; /* 1. 开启固定定位 */
+            bottom: 50px; /* 2. 距离屏幕底部边缘 50px */
+            right: 30px; /* 3. 距离屏幕右侧边缘 30px */
+
+            width: 80px;
+            height: 40px;
+            background-color: #333333;
+            color: #ffffff;
+            text-align: center;
+            line-height: 40px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        /* 1. 父级设为相对定位 (relative)：给子级立下规矩/参照物 */
+        .card {
+            position: relative;
+            width: 200px;
+            height: 200px;
+            border: 1px solid #ccc;
+            margin: 50px auto; /* 父盒子在标准流中水平居中，占地方 */
+        }
+
+        /* 2. 子级设为绝对定位 (absolute)：在父盒子内部自由飞舞 */
+        .badge {
+            position: absolute;
+            bottom: 0; /* 紧贴父盒子顶部 */
+            right: 0; /* 紧贴父盒子右侧 */
+
+            background-color: red;
+            color: white;
+            padding: 2px 8px;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+<div class="box relative-box">相对定位 1</div>
+<div class="box absolute-box">绝对定位 2</div>
+<div class="box normal-box">普通标准流 3</div>
+<!-- HTML 结构 -->
+<div class="back-to-top">▲ 返回顶部</div>
+<!-- HTML 结构：父盒子包着子盒子 -->
+<div class="card">
+    <img alt="商品图" src="goods.jpg">
+    <!-- 🌟 子盒子：需要定位在右上角 -->
+    <span class="badge">HOT</span>
+</div>
+</body>
+</html>
