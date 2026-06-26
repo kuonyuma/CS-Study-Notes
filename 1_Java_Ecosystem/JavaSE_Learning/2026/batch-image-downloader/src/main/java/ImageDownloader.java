@@ -34,7 +34,7 @@ public class ImageDownloader {
         ProgressTracker tracker = new ProgressTracker(total);
 
         // ===== 第三步：创建线程池 =====
-        ThreadPoolExecutor pool = ThreadPoolConfig.creatDownLoadPool();
+        ThreadPoolExecutor pool = ThreadPoolConfig.createDownloadPool();
 
         // ===== 第四步：提交所有任务，收集 Future =====
         // Future<Boolean> 是一张"任务收据"，代表"将来某时刻"的执行结果

@@ -17,9 +17,7 @@ public class DownloadTask implements Callable<Boolean> {
 
 
     private final String imageUrl;
-
     private final Integer taskId;
-
     private final String saveDirectory;
 
     public DownloadTask(String imageUrl,String saveDirectory,Integer taskId){

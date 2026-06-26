@@ -1,3 +1,5 @@
+import com.ryuukee.downloader.ThreadPoolConfig;
+
 import java.util.concurrent.*;
 
 public class Main {
@@ -25,6 +27,11 @@ public class Main {
         }
 
     }
+    static void t2(){
+        ThreadPoolExecutor pool = ThreadPoolConfig.createDownloadPool();
+
+    }
+
 
 }
 
