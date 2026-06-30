@@ -47,7 +47,7 @@ public class MiniMapper<T> {
 
             field.setAccessible(true);   // 突破 private 访问限制
 
-            String columnName = field.getAnnotation(Column.class).value();
+            String columnName = field.getAnnotation(Column.class).value();// 这里拿到的是数据库的列名
             Object value      = field.get(obj);   // 反射：读取这个字段在 obj 对象里的值
 
             columns.add(columnName);

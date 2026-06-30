@@ -34,6 +34,36 @@ char *t2(char *ret, int maxLen)
     }
 }
 
+// 插入排序：将 src 字符串中的字符按升序排序后存入 dest
+void insertSort(char *dest, char *src)
+{
+    int len = strlen(src);
+    if (len == 0)
+    {
+        dest[0] = '\0';
+        return;
+    }
+
+    // 先将 src 复制到 dest
+    strcpy(dest, src);
+
+    // 插入排序：从第二个字符开始，逐个插入到前面已排序的部分
+    for (int i = 1; i < len; i++)
+    {
+        char key = dest[i];
+        int j = i - 1;
+
+        // 将大于 key 的元素向后移动
+        while (j >= 0 && dest[j] > key)
+        {
+            dest[j + 1] = dest[j];
+            j--;
+        }
+        dest[j + 1] = key;
+    }
+    dest[len] = '\0';
+}
+
 int main()
 {
     char result[1000]; // 在主函数中开辟空间

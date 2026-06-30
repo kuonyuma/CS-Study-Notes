@@ -7,7 +7,7 @@ import java.lang.annotation.*;
  * 用法：@Column("name")
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.FIELD)           // 只能贴在字段上
+@Target(ElementType.FIELD)
 public @interface Column {
-    String value();  // 列名
+    String value();
 }

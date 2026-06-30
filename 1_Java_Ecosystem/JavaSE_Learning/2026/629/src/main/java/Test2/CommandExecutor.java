@@ -20,7 +20,6 @@ public class CommandExecutor {
                 Command command = e.getAnnotation(Command.class);
 
                 if(command.value().equals(cmdName)){
-
                     e.invoke(service);
                     isFind = true;
                     break;

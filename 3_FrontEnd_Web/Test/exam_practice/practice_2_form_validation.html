@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <title>考试实战 2：原生 JS 表单校验</title>
+    <style>
+        /* ==========================================
+           【考试要求】
+           1. 居中绘制一个注册表单卡片，宽度 400px，背景白色，四周有圆角和阴影。
+           2. 包含三个输入框：用户名、密码、确认密码，每个输入框占满一行，且下方有用于显示错误提示的空容器（颜色为红色，字号 12px）。
+           3. 当用户点击“注册”提交表单时，通过 JavaScript 进行校验：
+              - 用户名不能为空，且长度需在 3-10 位之间，不满足时提示“用户名长度须在3-10位之间”；
+              - 密码不能为空，且长度不能少于 6 位，不满足时提示“密码长度不能少于6位”；
+              - 确认密码必须与密码一致，不一致时提示“两次输入的密码不一致”。
+           4. 校验不通过时，**阻止表单提交**并在对应输入框下方显示错误信息；全通过时，弹出 `alert("注册成功！")` 并允许提交。
+           ========================================== */
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f2f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .form-card {
+            background-color: #fff;
+            width: 400px;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .form-card h2 {
+            margin-bottom: 20px;
+            text-align: center;
+            color: #333;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 6px;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .form-group input {
+            width: 100%;
+            height: 38px;
+            padding: 0 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            outline: none;
+            font-size: 14px;
+        }
+
+        .form-group input:focus {
+            border-color: #007bff;
+        }
+
+        /* 红色错误提示区域 */
+        .error-msg {
+            color: #dc3545;
+            font-size: 12px;
+            margin-top: 4px;
+            height: 16px; /* 固定高度，防止提示文字显示时页面抖动 */
+        }
+
+        .submit-btn {
+            width: 100%;
+            height: 40px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .submit-btn:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="form-card">
+        <h2>用户注册</h2>
+        <!-- 表单使用 onsubmit 拦截提交事件，并返回验证结果 -->
+        <form id="regForm" onsubmit="return validateForm(event)">
+            <div class="form-group">
+                <label for="username">用户名</label>
+                <input type="text" id="username" placeholder="请输入用户名 (3-10位)">
+                <div id="username-error" class="error-msg"></div>
+            </div>
+
+            <div class="form-group">
+                <label for="password">密码</label>
+                <input type="password" id="password" placeholder="请输入密码 (至少6位)">
+                <div id="password-error" class="error-msg"></div>
+            </div>
+
+            <div class="form-group">
+                <label for="confirmPwd">确认密码</label>
+                <input type="password" id="confirmPwd" placeholder="请再次输入密码">
+                <div id="confirmPwd-error" class="error-msg"></div>
+            </div>
+
+            <button type="submit" class="submit-btn">注 册</button>
+        </form>
+    </div>
+
+    <!-- ================= JS 校验逻辑 ================= -->
+    <script>
+        function validateForm(event) {
+            // 1. 获取输入框的 DOM 元素
+            var usernameInput = document.getElementById("username");
+            var passwordInput = document.getElementById("password");
+            var confirmPwdInput = document.getElementById("confirmPwd");
+
+            // 2. 获取错误提示显示区域
+            var usernameError = document.getElementById("username-error");
+            var passwordError = document.getElementById("password-error");
+            var confirmPwdError = document.getElementById("confirmPwd-error");
+
+            // 3. 初始化错误状态与清空旧的提示信息
+            var hasError = false;
+            usernameError.innerText = "";
+            passwordError.innerText = "";
+            confirmPwdError.innerText = "";
+
+            // 4. 用户名校验 (非空 & 长度)
+            var usernameVal = usernameInput.value.trim(); // .trim() 去除前后空格
+            if (usernameVal === "") {
+                usernameError.innerText = "用户名不能为空";
+                hasError = true;
+            } else if (usernameVal.length < 3 || usernameVal.length > 10) {
+                usernameError.innerText = "用户名长度须在3-10位之间";
+                hasError = true;
+            }
+
+            // 5. 密码校验 (非空 & 长度)
+            var passwordVal = passwordInput.value;
+            if (passwordVal === "") {
+                passwordError.innerText = "密码不能为空";
+                hasError = true;
+            } else if (passwordVal.length < 6) {
+                passwordError.innerText = "密码长度不能少于6位";
+                hasError = true;
+            }
+
+            // 6. 确认密码校验 (与密码一致)
+            var confirmPwdVal = confirmPwdInput.value;
+            if (confirmPwdVal === "") {
+                confirmPwdError.innerText = "请确认密码";
+                hasError = true;
+            } else if (confirmPwdVal !== passwordVal) {
+                confirmPwdError.innerText = "两次输入的密码不一致";
+                hasError = true;
+            }
+
+            // 7. 判断校验结果
+            if (hasError) {
+                // 阻止表单提交行为
+                event.preventDefault(); 
+                return false; 
+            }
+
+            // 如果全部通过
+            alert("注册成功！");
+            return true;
+        }
+    </script>
+</body>
+</html>

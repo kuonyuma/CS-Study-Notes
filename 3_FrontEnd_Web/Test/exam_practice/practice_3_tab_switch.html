@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <title>考试实战 3：原生 JS Tab 栏选项卡切换</title>
+    <style>
+        /* ==========================================
+           【考试要求】
+           1. 制作一个宽度 500px 的 Tab 选项卡组件。
+           2. 顶部有三个 Tab 头部按钮（“新闻”、“娱乐”、“体育”），水平均分宽度。
+              - 默认第一个按钮处于激活状态，底色为蓝色，文字白色。
+              - 其余按钮为淡灰色背景，深灰色文字。
+           3. 下方为对应的三个内容区域（每个内容区域包含一些文本，背景为白色，高 200px）。
+              - 默认只显示第一个内容区，其它内容区隐藏。
+           4. 当用户点击任意 Tab 按钮时：
+              - 被点击的按钮高亮（添加激活样式类，并移除其它按钮的激活类）；
+              - 下方显示与之相对应的内容区，同时隐藏其他内容区。
+           ========================================== */
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f7f7f7;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        /* Tab 容器 */
+        .tab-container {
+            width: 500px;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        /* 顶部按钮栏 */
+        .tab-header {
+            display: flex;
+            background-color: #f0f0f0;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .tab-btn {
+            flex: 1; /* 按钮均分宽度 */
+            height: 45px;
+            line-height: 45px;
+            text-align: center;
+            cursor: pointer;
+            color: #555;
+            font-weight: bold;
+            transition: all 0.2s;
+        }
+
+        /* 鼠标悬停未激活的 Tab 按钮 */
+        .tab-btn:hover {
+            background-color: #e5e5e5;
+        }
+
+        /* 激活状态下的按钮样式 */
+        .tab-btn.active {
+            background-color: #007bff;
+            color: white;
+        }
+
+        /* 下方内容栏 */
+        .tab-body {
+            padding: 20px;
+            height: 200px;
+            overflow: auto;
+        }
+
+        /* 内容区面板样式 */
+        .tab-item {
+            display: none; /* 默认全部隐藏 */
+            font-size: 15px;
+            line-height: 1.6;
+            color: #444;
+        }
+
+        /* 激活状态下的内容区显示 */
+        .tab-item.active {
+            display: block; /* 只有激活的才显示 */
+        }
+    </style>
+</head>
+<body>
+
+    <div class="tab-container">
+        <!-- 头部按钮 -->
+        <div class="tab-header">
+            <!-- 给每个按钮一个自定义属性 data-index 用来标识其索引 -->
+            <div class="tab-btn active" data-index="0">新闻</div>
+            <div class="tab-btn" data-index="1">娱乐</div>
+            <div class="tab-btn" data-index="2">体育</div>
+        </div>
+
+        <!-- 内容区域 -->
+        <div class="tab-body">
+            <div class="tab-item active">
+                <p>📰 <b>新闻头条：</b></p>
+                <p>今天天气晴朗，气温适宜。据气象台报道，未来三天均无降水，非常适合市民出行。请大家注意防晒防暑。</p>
+            </div>
+            <div class="tab-item">
+                <p>🎬 <b>娱乐八卦：</b></p>
+                <p>某著名演员近日在社交平台分享了自己的日常生活，其参演的新电影预计将于今年国庆档正式上映，影迷们表示非常期待。</p>
+            </div>
+            <div class="tab-item">
+                <p>⚽ <b>体育竞技：</b></p>
+                <p>在昨晚结束的男子足球比赛中，主场作战的队伍以 2:1 的比分艰难逆转战胜对手，取得了本届杯赛的小组赛首场胜利。</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= JS 切换逻辑 ================= -->
+    <script>
+        // 1. 获取所有 Tab 按钮和所有内容面板
+        var btns = document.querySelectorAll(".tab-btn");
+        var items = document.querySelectorAll(".tab-item");
+
+        // 2. 利用循环为每个按钮绑定点击事件
+        for (var i = 0; i < btns.length; i++) {
+            // 给当前按钮绑定点击事件
+            btns[i].onclick = function() {
+                // 3. 移除所有按钮的 active 类，并隐藏所有面板
+                for (var j = 0; j < btns.length; j++) {
+                    btns[j].classList.remove("active");
+                    items[j].classList.remove("active");
+                }
+
+                // 4. 为当前点击的按钮添加 active 类
+                this.classList.add("active");
+
+                // 5. 根据当前按钮的 data-index 属性，让对应索引的面板显示
+                var index = this.getAttribute("data-index");
+                items[index].classList.add("active");
+            };
+        }
+    </script>
+</body>
+</html>
