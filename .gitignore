@@ -56,3 +56,30 @@ Desktop.ini
 .angets/
 # 或者如果是常见的拼写：
 .agents/
+
+# ==================================
+# 临时文件/本地测试大文件 (Temp & Large Files)
+# ==================================
+*.tmp
+*.temp
+*.bak
+*.swp
+*~
+# 本地测试可能产生的大型临时文档/文本
+test*.md
+test*.txt
+test*.log
+# 常见的大型媒体文件（防止误提交大文件）
+*.mp4
+*.avi
+*.mkv
+*.wmv
+*.mov
+*.mp3
+*.wav
+*.flac
+# 本地数据库与备份文件
+*.db
+*.sqlite
+*.dump
+*.sql.gz
