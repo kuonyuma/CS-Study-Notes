@@ -24,6 +24,7 @@ public class User {
         this.id = id;
     }
 
+    @Deprecated
     public String getName() {
         return name;
     }
@@ -57,4 +58,6 @@ public class User {
                 ", email='" + email + '\'' +
                 '}';
     }
+
+
 }

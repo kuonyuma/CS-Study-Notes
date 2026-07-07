@@ -10,4 +10,4 @@ import java.lang.annotation.Target;
 public @interface Command{
     String value() default "暂无命名";
 
-}
+}Object

@@ -3,8 +3,10 @@ package demo4;
 import java.lang.reflect.Constructor;
 
 public class main {
-
-    public static void main(String[] args) throws NoSuchMethodException {
+    public static void main(String[] args) {
+            System.out.println('a' - 'A');
+    }
+    public static void main1(String[] args) throws NoSuchMethodException {
         Class<User> clazz = User.class;
         
         // 获取第一个无参数构造方法
