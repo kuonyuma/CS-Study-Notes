@@ -1,4 +1,4 @@
-package com.ryuukee._6;
+package com.ryuukee._6.demo5;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

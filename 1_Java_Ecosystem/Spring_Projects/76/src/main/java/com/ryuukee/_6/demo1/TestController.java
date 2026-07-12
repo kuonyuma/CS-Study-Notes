@@ -1,4 +1,4 @@
-package com.ryuukee._6;
+package com.ryuukee._6.demo1;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.RequestMapping;

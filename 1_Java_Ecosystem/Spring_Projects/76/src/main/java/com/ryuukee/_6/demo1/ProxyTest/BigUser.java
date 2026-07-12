@@ -1,4 +1,4 @@
-package com.ryuukee._6.ProxyTest;
+package com.ryuukee._6.demo1.ProxyTest;
 
 public class BigUser implements User{
 
