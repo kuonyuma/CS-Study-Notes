@@ -1,0 +1,6 @@
+# Gemini 模型名称
+model_name: gemini-2.5-flash
+
+# Gemini API Key（请复制此文件为 config/config.yml 并填入你自己的 key）
+gemini:
+  key: YOUR_GEMINI_API_KEY_HERE

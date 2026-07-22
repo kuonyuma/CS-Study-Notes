@@ -83,3 +83,18 @@ test*.log
 *.sqlite
 *.dump
 *.sql.gz
+
+# ==================================
+# Python 专有过滤规则 (虚拟环境 / 敏感配置 / 缓存)
+# ==================================
+.venv/
+venv/
+ENV/
+env/
+__pycache__/
+*.py[cod]
+*$py.class
+config/config.yml
+config.yml
+logs/
+data/output/

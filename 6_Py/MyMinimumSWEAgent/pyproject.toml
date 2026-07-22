@@ -1,0 +1,16 @@
+[tool.poetry]
+name = "my-minimum-swe-agent"
+version = "0.0.1"
+description = "最小的 SWE Agent —— 只有文件读写和终端执行能力"
+authors = ["you"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = ">=3.10,<4.0"
+google-genai = "^2.13.0"
+pyyaml = "^6.0"
+pydantic = "^2.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
