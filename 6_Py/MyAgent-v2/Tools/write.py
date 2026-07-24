@@ -1,10 +1,13 @@
 import logging
-from venv import logger
 
 
-def write(out_path:str,content:str) -> str:
+def write(params: dict) -> str:
     try:
-        with open(out_path,'a',encoding="utf-8") as f:
+        out_path = params.get("path","")
+        content = params.get("content","")
+        with open(out_path,'w',encoding="utf-8") as f:
             f.write(content)
+            return "写入成功"
     except Exception as e:
-        logger.error(f"写文件时出错{e}")
+        logging.error(f"写文件时出错{e}")
+        return "写入失败"

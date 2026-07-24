@@ -1,28 +1,25 @@
 import json
 import os
-import sys
 from pathlib import Path
-from venv import create
 import yaml
 from enum import Enum,auto
 from typing import Dict, Callable
 from google import genai
-import gemini
-from Tools.read import read as read_file_tool
-from Tools.terminal import terminal as terminal_tool
-from Tools.write import write as write_file_tool
-from gemini import generate
+from llm import gemini
+from Tools.read import read as read_file
+from Tools.terminal import terminal as terminal
+from Tools.write import write as write_file
 
-BASE_DIR = Path(__file__).resolve().parent
+BASE_DIR = Path(__file__).resolve().parent.parent
 
 
-PROMPT_PATH = BASE_DIR / "data" / "swe-prompt.txt"
+PROMPT_PATH = {"path":str(BASE_DIR / "data" / "swe-prompt.txt")}
 
 class Name(Enum):
     READ_FILE = auto()
     WRITE_FILE = auto()
-    TERMINA_TOOL = auto()
-    NONE_TOOL = auto()
+    TERMINAL = auto()
+    NONE = auto()
 
 class Tool:
 
@@ -45,13 +42,14 @@ class Agent:
         self.system_prompt = self.load_template()
 
     def load_template(self):
-        return read_file_tool(PROMPT_PATH)
+        return read_file(PROMPT_PATH)
 
     def get_history(self) -> str:
         return "\n".join([f"{msg['role']}:{msg['content']}" for msg in self.messages])
 
 
     def execute(self,request:str):
+        self.curr_query = request
         self.tier = 0
         history_str = self.get_history()
         if not history_str:
@@ -59,7 +57,8 @@ class Agent:
         self.trace("user",request)
         prompt = self.system_prompt.format(
             query = request,
-            history = history_str
+            history = history_str,
+            cwd=os.getcwd()
         )
         return self.think(prompt)
 
@@ -68,17 +67,26 @@ class Agent:
 
     def trace(self, role, content):
         self.messages.append({"role":role,"content":content})
-        with open("history_message.txt",'a',encoding="utf-8") as f:
+        HISTORY_PATH = BASE_DIR / "data"/ "history_message.txt"
+        with open(HISTORY_PATH, 'a', encoding="utf-8") as f:
             f.write(f"{role}:{content}\n")
 
     def think(self,request:str):
 
         if self.tier < self.max_tier:
             self.tier += 1
-            response = gemini.generate(self.client,self.mode_name,request)
+            response = gemini.generate(self.client, self.mode_name, request)
+            if response is None:
+                msg = "Gemini 未返回有效响应，请重试。"
+                self.trace("assistant", msg)
+                return msg
+            self.trace("assistant", response)
             return self.decide(response)
         else:
-            print("达到思考上限")
+            msg = f"已达到最大思考次数({self.max_tier})，无法继续推理。"
+            self.trace("assistant", msg)
+            return msg
+
 
 
     def decide(self, response:str):
@@ -110,17 +118,30 @@ class Agent:
             return cleared
 
 
-    def act(self, tool_name:str, tool_input):
-        tool = self.tools[Name[tool_name.upper()]]
-        response = tool.use(tool_input)
-        return self.think(response)
+    def act(self, name:str, tool_input):
+        tool_name = name.upper()
+        try:
+            tool = self.tools[Name[tool_name]]
+
+            response = tool.use(tool_input)
+            self.trace("observation",f"[{tool_name}] 返回: \n{response}")
+            history_str = self.get_history()
+            prompt = self.system_prompt.format(
+                query = self.curr_query,
+                history = history_str,
+                cwd=os.getcwd()
+            )
+            return self.think(prompt)
+        except  KeyError as e:
+            return f"未找到该工具{tool_name},{e}"
 
 def creat_agent() ->Agent:
     # 获取key
     my_api_key:str = os.getenv("Gemini")
 
     if not my_api_key or my_api_key.startswith("your_"):
-        with open("config.yaml",'r',encoding="utf-8") as f:
+        CONFIG_YAML = BASE_DIR / "config"/"config.yaml"
+        with open(CONFIG_YAML, 'r', encoding="utf-8") as f:
             config = yaml.safe_load(f)
 
         my_api_key = config.get("gemini",{}).get("key","")
@@ -132,9 +153,9 @@ def creat_agent() ->Agent:
     client = genai.Client(api_key = my_api_key)
     agent = Agent(client)
 
-    agent.register(Name.READ_FILE,read_file_tool)
-    agent.register(Name.WRITE_FILE,write_file_tool)
-    agent.register(Name.TERMINA_TOOL,terminal_tool)
+    agent.register(Name.READ_FILE,read_file)
+    agent.register(Name.WRITE_FILE,write_file)
+    agent.register(Name.TERMINAL,terminal)
     return agent
 
 
@@ -142,7 +163,7 @@ if __name__ == "__main__":
 
     agent = creat_agent()
     while True:
-        request = input("用户: ")
+        request = input()
         if request.strip() == "exit":
             break
         response = agent.execute(request)
