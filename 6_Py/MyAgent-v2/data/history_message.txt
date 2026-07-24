@@ -153,3 +153,5 @@ assistant:`demo1.md` 的内容如下：
 - 如果工具返回错误，分析原因后换一种方式重试
 - 有足够信息时，给出最终回答
 ```
+user:hello
+assistant:Gemini 未返回有效响应，请重试。
