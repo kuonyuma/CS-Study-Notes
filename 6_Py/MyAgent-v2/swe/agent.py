@@ -2,172 +2,126 @@ import json
 import os
 from pathlib import Path
 import yaml
-from enum import Enum,auto
-from typing import Dict, Callable
 from google import genai
+from google.genai import types  # 补全 types 导入
 from llm import gemini
 from Tools.read import read as read_file
 from Tools.terminal import terminal as terminal
 from Tools.write import write as write_file
 
 BASE_DIR = Path(__file__).resolve().parent.parent
+PROMPT_PATH = BASE_DIR / "data" / "swe-prompt.txt"
 
-
-PROMPT_PATH = {"path":str(BASE_DIR / "data" / "swe-prompt.txt")}
-
-class Name(Enum):
-    READ_FILE = auto()
-    WRITE_FILE = auto()
-    TERMINAL = auto()
-    NONE = auto()
-
-class Tool:
-
-    def __init__(self,name:str,func:Callable[[str],str]):
-        self.name = name
-        self.func = func
-
-    def use(self,parameter)-> str:
-        return self.func(parameter)
 
 class Agent:
-
-    def __init__(self,client):
+    def __init__(self, client):
         self.client = client
         self.mode_name = "gemini-3.6-flash"
-        self.tools: Dict[Name, Tool] = {} # 导入工具
-        self.messages:list[Dict[str,str]] = []
-        self.tier = 0
+        self.tools: Dict[str, Callable] = {}
+        self.contents: list[types.Content] = []
         self.max_tier = 10
         self.system_prompt = self.load_template()
 
     def load_template(self):
-        return read_file(PROMPT_PATH)
+        return read_file(str(PROMPT_PATH))
 
-    def get_history(self) -> str:
-        return "\n".join([f"{msg['role']}:{msg['content']}" for msg in self.messages])
+    def execute(self, request: str) -> str:
+        """Agent 执行入口"""
+        # 1. 每次新请求时重置对话历史
+        self.contents = []
 
-
-    def execute(self,request:str):
-        self.curr_query = request
-        self.tier = 0
-        history_str = self.get_history()
-        if not history_str:
-            history_str = "暂无历史"
-        self.trace("user",request)
-        prompt = self.system_prompt.format(
-            query = request,
-            history = history_str,
-            cwd=os.getcwd()
+        # 2. 将用户的初始请求封装为标准的 types.Content
+        self.contents.append(
+            types.Content(role="user", parts=[types.Part.from_text(text=request)])
         )
-        return self.think(prompt)
 
-    def register(self, name:Name, func):
-            self.tools[name] = Tool(name,func)
+        # 3. 开启思考循环
+        return self.think(tier=0)
 
-    def trace(self, role, content):
-        self.messages.append({"role":role,"content":content})
-        HISTORY_PATH = BASE_DIR / "data"/ "history_message.txt"
-        with open(HISTORY_PATH, 'a', encoding="utf-8") as f:
-            f.write(f"{role}:{content}\n")
+    def register(self, func: Callable):
+        self.tools[func.__name__] = func
 
-    def think(self,request:str):
+    def think(self, tier: int = 0) -> str:
+        """原生 Function Calling 核心思考循环"""
+        if tier >= self.max_tier:
+            return "已达到最大思考轮数 (max_tier)，停止思考。"
 
-        if self.tier < self.max_tier:
-            self.tier += 1
-            response = gemini.generate(self.client, self.mode_name, request)
-            if response is None:
-                msg = "Gemini 未返回有效响应，请重试。"
-                self.trace("assistant", msg)
-                return msg
-            self.trace("assistant", response)
-            return self.decide(response)
-        else:
-            msg = f"已达到最大思考次数({self.max_tier})，无法继续推理。"
-            self.trace("assistant", msg)
-            return msg
+        # 1. 发送包含完整 Content 历史的请求
+        response = gemini.generate(
+            self.client,
+            self.mode_name,
+            contents=self.contents,
+            system_instruction=self.system_prompt,
+        )
+
+        if not response or not response.candidates:
+            return "错误: Gemini API 未返回有效结果。"
+
+        # 2. 记录模型的 Content 到历史中
+        model_content = response.candidates[0].content
+        self.contents.append(model_content)
+
+        # 3. 检查是否有工具调用
+        function_calls = response.function_calls
+        if function_calls:
+            for call in function_calls:
+                func_name = call.name
+                func_args = call.args or {}
+
+                # 执行本地工具
+                if func_name in self.tools:
+                    try:
+                        result = self.tools[func_name](**func_args)
+                    except Exception as e:
+                        result = f"工具 {func_name} 执行异常: {e}"
+                else:
+                    result = f"错误: 未注册名为 {func_name} 的工具"
+
+                # 4. 将工具执行结果作为 user role 存入历史
+                self.contents.append(
+                    types.Content(
+                        role="user",
+                        parts=[
+                            types.Part.from_function_response(
+                                name=func_name, response={"result": str(result)}
+                            )
+                        ],
+                    )
+                )
+
+            # 5. 带着工具结果递归进入下一轮思考
+            return self.think(tier=tier + 1)
+
+        # 6. 没有工具调用，返回最终答案
+        return response.text if response.text else "(模型未返回文本)"
 
 
-
-    def decide(self, response:str):
-
-        cleared = response.strip()
-        if cleared.startswith("```"):
-            liens = cleared.split("\n")
-            liens = [l for l in liens if not l.strip().startswith("```")]
-            cleared = "\n".join(liens)
-
-        try:
-            parsed = json.loads(cleared)
-
-            if "action" in parsed:
-                name = parsed.get("action").get("name")
-                input = parsed.get("action").get("input")
-                return self.act(name,input)
-
-            elif "answer" in parsed:
-                answer = parsed["answer"]
-                self.trace("assistant", answer)
-                return answer
-            else:
-                answer = parsed.get("response") or parsed.get("message") or str(parsed)
-                self.trace("assistant", answer)
-                return answer
-        except json.JSONDecodeError:
-            self.trace("assistant", cleared)
-            return cleared
-
-
-    def act(self, name:str, tool_input):
-        tool_name = name.upper()
-        try:
-            tool = self.tools[Name[tool_name]]
-
-            response = tool.use(tool_input)
-            self.trace("observation",f"[{tool_name}] 返回: \n{response}")
-            history_str = self.get_history()
-            prompt = self.system_prompt.format(
-                query = self.curr_query,
-                history = history_str,
-                cwd=os.getcwd()
-            )
-            return self.think(prompt)
-        except  KeyError as e:
-            return f"未找到该工具{tool_name},{e}"
-
-def creat_agent() ->Agent:
-    # 获取key
-    my_api_key:str = os.getenv("Gemini")
+def creat_agent() -> Agent:
+    my_api_key: str = os.getenv("GEMINI_API_KEY")
 
     if not my_api_key or my_api_key.startswith("your_"):
-        CONFIG_YAML = BASE_DIR / "config"/"config.yaml"
-        with open(CONFIG_YAML, 'r', encoding="utf-8") as f:
+        CONFIG_YAML = BASE_DIR / "config" / "config.yaml"
+        with open(CONFIG_YAML, "r", encoding="utf-8") as f:
             config = yaml.safe_load(f)
-
-        my_api_key = config.get("gemini",{}).get("key","")
+            my_api_key = config.get("gemini", {}).get("key", "")
 
     if not my_api_key or my_api_key.startswith("your_"):
         raise ValueError("key为空")
 
-    # 创建gemini 客户端
-    client = genai.Client(api_key = my_api_key)
+    client = genai.Client(api_key=my_api_key)
     agent = Agent(client)
 
-    agent.register(Name.READ_FILE,read_file)
-    agent.register(Name.WRITE_FILE,write_file)
-    agent.register(Name.TERMINAL,terminal)
+    agent.register(read_file)
+    agent.register(write_file)
+    agent.register(terminal)
     return agent
 
 
 if __name__ == "__main__":
-
     agent = creat_agent()
     while True:
-        request = input()
+        request = input("User: ")
         if request.strip() == "exit":
             break
         response = agent.execute(request)
-        print(f"AI: {response}")
-
-
-
+        print(f"AI: {response}\n")

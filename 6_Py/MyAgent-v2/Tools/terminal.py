@@ -1,8 +1,12 @@
 import subprocess
 import  logging
 
-def terminal(parameter:dict)->str:
-    cmd = parameter.get("command")
+def terminal(command:str)->str:
+    """执行终端命令并返回输出。
+    :param command: 要执行的终端命令。
+    :return: 命令的标准输出和标准错误。
+    """
+    cmd = command
     if not cmd:
         return "命令为空"
 

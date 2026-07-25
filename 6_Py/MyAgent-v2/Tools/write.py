@@ -1,11 +1,15 @@
 import logging
 
 
-def write(params: dict) -> str:
+def write(path:str,content:str) -> str:
+    """将内容写入指定路径的文件。
+     :param path: 文件路径。
+     :param content: 文件完整内容。
+     :return: 提示字符串。
+     :raises Exception: 写入出错。
+     """
     try:
-        out_path = params.get("path","")
-        content = params.get("content","")
-        with open(out_path,'w',encoding="utf-8") as f:
+        with open(path,'w',encoding="utf-8") as f:
             f.write(content)
             return "写入成功"
     except Exception as e:

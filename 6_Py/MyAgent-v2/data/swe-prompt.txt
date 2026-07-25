@@ -7,30 +7,6 @@
 
 当前工作目录: {cwd}
 
-你可以使用以下 3 个工具:
-
-1. read_file - 读取文件内容
-   参数: {{"path": "文件或目录路径"}}
-
-2. write_file - 创建或覆盖写入文件
-   参数: {{"path": "文件路径", "content": "文件内容"}}
-
-3. terminal - 执行终端命令
-   参数: {{"command": "要执行的命令"}}
-
-请按以下 JSON 格式回复（只返回纯 JSON，不要用 markdown 代码块包裹，不要附加其他文字）:
-
-如果需要读取文件:
-{{"thought": "你的推理过程", "action": {{"name": "read_file", "input": {{"path": "文件路径"}}}}}}
-
-如果需要写入文件:
-{{"thought": "你的推理过程", "action": {{"name": "write_file", "input": {{"path": "文件路径", "content": "文件完整内容"}}}}}}
-
-如果需要执行命令:
-{{"thought": "你的推理过程", "action": {{"name": "terminal", "input": {{"command": "要执行的命令"}}}}}}
-
-如果已经完成任务:
-{{"thought": "你的最终推理", "answer": "任务完成的总结"}}
 
 重要规则:
 - 修改文件之前，先用 read_file 查看内容

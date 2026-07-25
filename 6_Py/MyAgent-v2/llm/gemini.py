@@ -1,24 +1,31 @@
-
 from google import genai
 from google.genai import types
-from typing import Optional
+from typing import Optional, Union, List
 
-def generate(client: genai.Client,
-             model_name:str,
-             prompt:str)->Optional[str]:
+from Tools.write import write
+from Tools.terminal import terminal
+from Tools.read import read
+
+
+def generate(
+    client: genai.Client,
+    model_name: str,
+    contents: Union[str, List[types.Content]],
+    system_instruction: Optional[str] = None,
+) -> Optional[types.GenerateContentResponse]:
     try:
-        response = client.models.generate_content(
-            model = model_name,
-            contents = prompt,
-            config=types.GenerateContentConfig(
-                temperature=0.0,  # 0.0 表示输出最严谨精确（ Agent 必备）
-                max_output_tokens=8192,  # 最大输出字数限制
-            )
+        config = types.GenerateContentConfig(
+            temperature=1.0,
+            max_output_tokens=8192,
+            tools=[read, terminal, write],
+            system_instruction=system_instruction,
         )
 
-        if response and response.text:
-            return response.text
-        return None
+        response = client.models.generate_content(
+            model=model_name, contents=contents, config=config
+        )
+
+        return response
     except Exception as e:
         print(f"连接 Gemini 发生错误: {e}")
         return None
