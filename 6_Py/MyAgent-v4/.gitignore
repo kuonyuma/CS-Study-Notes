@@ -1,0 +1,5 @@
+config/config.yaml
+__pycache__/
+.venv/
+.idea/
+history_message.txt
