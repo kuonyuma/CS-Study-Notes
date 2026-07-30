@@ -98,3 +98,8 @@ config/config.yml
 config.yml
 logs/
 data/output/
+
+# ==================================
+# Agent / Qoder
+# ==================================
+.qoder/

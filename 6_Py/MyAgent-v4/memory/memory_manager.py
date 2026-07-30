@@ -3,7 +3,7 @@ from google import genai
 from llm import gemini
 
 
-def compress_contents(
+async def compress_contents(
     contents: list[types.Content],
     client: genai.Client,
     model_name: str,
