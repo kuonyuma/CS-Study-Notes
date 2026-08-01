@@ -1,7 +1,5 @@
-import os
 import sys
 from pathlib import Path
-from llm.gemini import stream_event
 
 # 1. 优先设置 Path
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -9,26 +7,23 @@ if str(BASE_DIR) not in sys.path:
     sys.path.append(str(BASE_DIR))
 
 # 2. 再导入项目内部的包
-from memory.memory_manager import compress_contents
-from collections.abc import Callable
-from google import genai
-from google.genai import types  # 补全 types 导入
-from llm import gemini
-from Tools.read import read as read_file
-from Tools.terminal import terminal
-from Tools.write import write as write_file
-from llm.gemini import stream_result, stream_event, generate
 import asyncio
+from collections.abc import Callable
+from google.genai import types
+from llm import gemini
+from llm.gemini import stream_result, stream_event
+from memory.memory_manager import compress_contents
+from Tools.read import read as read_file
 from typing import AsyncGenerator
 
-
 PROMPT_PATH = BASE_DIR / "data" / "swe-prompt.txt"
+DEFAULT_MODEL_NAME = "gemini-3.6-flash"
 
 
 class Agent:
-    def __init__(self, client):
+    def __init__(self, client, model_name: str | None = None):
         self.client = client
-        self.mode_name = "gemini-3.6-flash"
+        self.model_name = model_name or DEFAULT_MODEL_NAME
         self.tools: dict[str, Callable] = {}
         self.contents: list[types.Content] = []
         self.max_tier = 10
@@ -67,7 +62,7 @@ class Agent:
         if tool is None:
             formatted_response = {
                 "status": "FAILED",
-                "error_message": f"未注册的工具: {call.name}",
+                "output": f"未注册的工具: {call.name}",
             }
         else:
             try:
@@ -84,26 +79,53 @@ class Agent:
     async def think(self):
         while self.tier <= self.max_tier:
             self.tier += 1
-            # self.contents = await compress_contents(
-            #     self.contents, self.client, self.mode_name
-            # )
+            # 对话历史过长时先压缩，避免超出上下文窗口
+            self.contents = await compress_contents(
+                self.contents, self.client, self.model_name
+            )
             result: stream_result | None = None
+            last_error_text = ""
+            tools = None
+            if self.tools:
+                tools = [
+                    types.Tool(
+                        function_declarations=[
+                            types.FunctionDeclaration.from_callable_with_api_option(
+                                callable=fn
+                            )
+                            for fn in self.tools.values()
+                        ]
+                    )
+                ]
+
             # 1. 发送包含完整 Content 历史的请求
             async for event in gemini.generate(
                 self.client,
-                self.mode_name,
+                self.model_name,
                 contents=self.contents,
                 system_instruction=self.system_prompt,
+                function_calls=tools,
             ):
                 if event.type == "end":
                     result = event.result
+                elif event.type == "error":
+                    last_error_text = event.text or last_error_text
                 else:
                     yield event
 
             if result is None:
-                yield stream_event(type="error")
-                return
-            # 将模型的输full_text保存
+                # 连续失败达到预算后放弃，否则保留历史重试
+                self.consecutive_errors += 1
+                if self.consecutive_errors >= self.max_retry_budget:
+                    yield stream_event(
+                        type="error", text=last_error_text or "模型连续调用失败"
+                    )
+                    return
+                continue
+
+            self.consecutive_errors = 0
+
+            # 将模型的输出保存为历史
             if result.model_content:
                 self.contents.append(result.model_content)
 
@@ -117,3 +139,7 @@ class Agent:
                 part = await self.execute_tool(call)
                 tool_response_parts.append(part)
             self.contents.append(types.Content(role="user", parts=tool_response_parts))
+
+        yield stream_event(
+            type="error", text=f"达到最大迭代次数 {self.max_tier}，任务未完成"
+        )

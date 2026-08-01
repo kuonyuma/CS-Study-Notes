@@ -29,3 +29,15 @@ def get_client() -> genai.Client:
         api_key = __get_key()
         _client = genai.Client(api_key=api_key)
     return _client
+
+
+def get_model_name() -> str:
+    """从 config.yaml 读取模型名，未配置时使用默认值。"""
+    try:
+        CONFIG_YAML = BASE_DIR / "config" / "config.yaml"
+        with open(CONFIG_YAML, "r", encoding="utf-8") as f:
+            config = yaml.safe_load(f) or {}
+        model_name = config.get("gemini", {}).get("model_name", "")
+    except (OSError, yaml.YAMLError):
+        model_name = ""
+    return model_name or "gemini-3.6-flash"

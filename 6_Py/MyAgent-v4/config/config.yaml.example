@@ -1,2 +1,3 @@
 gemini:
   key: your_api_key_here
+  model_name: gemini-3.6-flash

@@ -1,6 +1,7 @@
 from google.genai import types
 from google import genai
 from llm import gemini
+import logging
 
 
 async def compress_contents(
@@ -32,15 +33,25 @@ async def compress_contents(
             )
         ]
 
-        tmp = gemini.generate(
-            client=client,
-            model_name=model_name,
-            contents=query,
-            system_instruction="你是一个严谨的上下文压缩助手，负责提取任务执行的核心状态.",
-            use_tools=False,
-        )
+        tmp_text = ""
+        try:
+            async for ev in gemini.generate(
+                client=client,
+                model_name=model_name,
+                contents=query,
+                system_instruction=(
+                    "你是一个严谨的上下文压缩助手，负责提取任务执行的核心状态."
+                ),
+            ):
+                if ev.type == "end" and ev.result:
+                    tmp_text = ev.result.full_text or ""
+        except Exception as e:
+            logging.warning(f"上下文压缩失败，保持原历史: {e}")
+            return contents
 
-        tmp_text = tmp.text if (tmp and tmp.text) else "历史摘要提取失败。"
+        if not tmp_text:
+            logging.warning("上下文压缩未获得摘要，保持原历史")
+            return contents
 
         summary_content = types.Content(
             role="user",
