@@ -1,11 +1,21 @@
 from dataclasses import dataclass, field
-from typing import AsyncGenerator, Callable, Awaitable, List, Dict, Any, Optional, Literal
+from typing import (
+    AsyncGenerator,
+    Callable,
+    Awaitable,
+    List,
+    Dict,
+    Any,
+    Optional,
+    Literal,
+)
 from google.genai import types
 from py_labs.lab01_streaming_llm.stream_message import stream_message
 from py_labs.lab04_agentic_loop.tools.index import find_tool, get_gemini_tools
 
 PermissionCheck = Callable[[str, Dict[str, Any]], Awaitable[bool]]
 TerminationReason = Literal["completed", "max_turns", "error"]
+
 
 @dataclass
 class LoopResult:
@@ -14,6 +24,7 @@ class LoopResult:
     turns: int
     usage: Dict[str, int]
     error_message: Optional[str] = None
+
 
 @dataclass
 class LoopEvent:
@@ -27,9 +38,12 @@ class LoopEvent:
     turn: int = 0
     loop_result: Optional[LoopResult] = None
 
+
 async def query(
     contents: List[types.Content],
-    system_prompt: Optional[str] = "You are Gemini, a highly capable AI assistant developed by Google. You must never claim to be Claude, ChatGPT, or any other model.",
+    system_prompt: Optional[
+        str
+    ] = "You are Gemini, a highly capable AI assistant developed by Google. You must never claim to be Claude, ChatGPT, or any other model.",
     max_turns: int = 10,
     max_tokens: Optional[int] = None,
     can_use_tool: Optional[PermissionCheck] = None,
@@ -45,7 +59,9 @@ async def query(
     turns = 0
     tools = get_gemini_tools()
 
-    def make_finish(reason: TerminationReason, err_msg: Optional[str] = None) -> LoopResult:
+    def make_finish(
+        reason: TerminationReason, err_msg: Optional[str] = None
+    ) -> LoopResult:
         return LoopResult(
             contents=history_contents,
             termination_reason=reason,
@@ -86,7 +102,9 @@ async def query(
 
         # 2. Append assistant response into history
         if api_result.raw_parts:
-            history_contents.append(types.Content(role="model", parts=api_result.raw_parts))
+            history_contents.append(
+                types.Content(role="model", parts=api_result.raw_parts)
+            )
 
         # 3. Check if done (no tool calls)
         if not api_result.function_calls:
@@ -124,11 +142,13 @@ async def query(
                     res_content = f"Error executing tool '{name}': {err}"
                     is_err = True
 
-            yield LoopEvent(type="tool_done", id=call_id, name=name, result=res_content, is_error=is_err)
-            response_parts.append(types.Part.from_function_response(name=name, response={"result": res_content}))
-
-        # Append tool response content
-        history_contents.append(types.Content(role="user", parts=response_parts))
+            yield LoopEvent(
+                type="tool_done",
+                id=call_id,
+                name=name,
+                result=res_content,
+                is_error=is_err,
+            )
         yield LoopEvent(type="turn_complete", turn=turns)
 
     res = make_finish("max_turns")
