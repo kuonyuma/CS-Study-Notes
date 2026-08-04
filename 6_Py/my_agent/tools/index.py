@@ -1,8 +1,9 @@
 from tools.list_files import ListFiles
+from tools.edit_file import EditFile
 from google.genai import types
 from tools.base import Tool
 
-ALL_TOOL: list[Tool] = [ListFiles()]
+ALL_TOOL: list[Tool] = [ListFiles(), EditFile()]
 
 
 def get_tool(name: str) -> Tool | None:

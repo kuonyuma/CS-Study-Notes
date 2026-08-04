@@ -2,12 +2,10 @@ from google.genai import types
 from prompt_toolkit import PromptSession
 from prompt_toolkit.patch_stdout import patch_stdout
 from rich.console import Console
-from client.stream_message import stream_message, StreamResult
 from rich.markdown import Markdown
 from rich.live import Live
-import sys
 from tools.index import get_function_declarations
-from tools.executor import execute_tools
+from core.agentic_loop import LoopResult, query
 
 console = Console()
 
@@ -28,40 +26,30 @@ class App:
 
             await self.run_turn(user_text)
 
-    async def run_turn(self, query: str):
+    async def run_turn(self, user_query: str):
 
         user_content = types.Content(
-            role="user", parts=[types.Part.from_text(text=query)]
+            role="user", parts=[types.Part.from_text(text=user_query)]
         )
         self.contents.append(user_content)
 
-        while True:
-            result: StreamResult | None = None
-            full_text: str = ""
-            with Live(
-                Markdown(full_text), console=console, refresh_per_second=15
-            ) as live:
-                async for event in stream_message(
-                    contents=self.contents, tools=get_function_declarations()
-                ):
-                    if event.type == "text":
-                        full_text += event.text
-                        # console.print(event.text, end="", highlight=False)
-                        live.update(Markdown(full_text))
-                    if event.type == "message_done":
-                        result = event.result
+        result: LoopResult | None = None
+        full_text: str = ""
+        with Live(Markdown(full_text), console=console, refresh_per_second=15) as live:
+            async for loop_event in query(
+                contents=self.contents, tools=get_function_declarations()
+            ):
+                if loop_event.type == "text":
+                    full_text += loop_event.text
+                    live.update(Markdown(full_text))
+                elif loop_event.type == "tool_start":
+                    live.update(Markdown(full_text + "\n\n模型使用工具中.."))
+                elif loop_event.type == "turn_complete":
+                    result = loop_event.result
 
-            if result is None:
-                sys.stderr.write("在app.py未收到result")
-                sys.exit(1)
-            model_content = types.Content(role="model", parts=result.raw_parts)
-            self.contents.append(model_content)
-
-            if result.function_calls:
-                console.print("开始调用工具...")
-
-                result = await execute_tools(result.function_calls)
-                self.contents.append(result)
-                continue
-            else:
-                break
+                    if result.reason == "completed":
+                        console.print("正常退出")
+                    elif result.reason == "error":
+                        console.print("任务出错")
+                    elif result.reason == "max_turns":
+                        console.print("代理陷入死循环")
