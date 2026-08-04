@@ -1,9 +1,10 @@
 from dataclasses import dataclass
-from typing import Literal, AsyncGenerator
+from typing import Literal, AsyncGenerator, Callable
 from google.genai import types
 from client.stream_message import stream_message, StreamResult, StreamEvent
 import sys
 from tools.executor import execute_tools
+from tools.index import get_tool
 
 
 @dataclass
@@ -19,7 +20,9 @@ class LoopEvent:
 
 
 async def query(
-    contents: list[types.Content], tools: list[types.Tool]
+    contents: list[types.Content],
+    tools: list[types.Tool],
+    check: Callable | None = None,
 ) -> AsyncGenerator[LoopEvent, None]:
     teir = 1
     while teir <= 10:
@@ -40,11 +43,41 @@ async def query(
         if result.function_calls:
             yield LoopEvent(type="tool_start")
 
-            tool_content = await execute_tools(result.function_calls)
+            is_denied = False
+            for fc in result.function_calls:
+                t = get_tool(fc.name)
+
+                if t and not t.read_only:
+                    if check:
+                        allowed = await check(fc.name, fc.args)
+                        if not allowed:
+                            is_denied = True
+                            break
+
+            if is_denied:
+                parts = []
+                for fc in result.function_calls:
+                    parts.append(
+                        types.Part.from_function_response(
+                            name=fc.name,
+                            response={"error": "user拒绝了你的修改请求。"},
+                        )
+                    )
+                tool_content = types.Content(role="user", parts=parts)
+            else:
+                tool_content = await execute_tools(result.function_calls)
             contents.append(tool_content)
             yield LoopEvent(type="tool_done")
         else:
-            loop_result = LoopResult(reason="completed")
-            yield LoopEvent(type="turn_complete", result=loop_result)
+            # 模型不再调用工具，正常结束
+            yield LoopEvent(
+                type="turn_complete",
+                result=LoopResult(reason="completed"),
+            )
             return
-    yield LoopEvent(type="turn_complete", result=LoopResult(reason="max_turns"))
+
+    # while 循环耗尽（超过最大轮次）
+    yield LoopEvent(
+        type="turn_complete",
+        result=LoopResult(reason="max_turns"),
+    )

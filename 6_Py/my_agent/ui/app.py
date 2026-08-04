@@ -37,7 +37,9 @@ class App:
         full_text: str = ""
         with Live(Markdown(full_text), console=console, refresh_per_second=15) as live:
             async for loop_event in query(
-                contents=self.contents, tools=get_function_declarations()
+                contents=self.contents,
+                tools=get_function_declarations(),
+                check=self.check,
             ):
                 if loop_event.type == "text":
                     full_text += loop_event.text
@@ -47,9 +49,15 @@ class App:
                 elif loop_event.type == "turn_complete":
                     result = loop_event.result
 
-                    if result.reason == "completed":
-                        console.print("正常退出")
-                    elif result.reason == "error":
-                        console.print("任务出错")
-                    elif result.reason == "max_turns":
-                        console.print("代理陷入死循环")
+        if result:
+            if result.reason == "error":
+                console.print("[red]任务出错[/red]")
+            elif result.reason == "max_turns":
+                console.print("[yellow]代理陷入死循环[/yellow]")
+
+    async def check(self, name: str, parameter: dict) -> bool:
+        console.print(f"\n[red]⚠️ 警告：大模型申请执行危险写入工具 `{name}`[/red]")
+        console.print(f"[yellow]执行参数：{parameter}[/yellow]")
+
+        answer: str = await self.session.prompt_async("是否允许执行？(y/n) > ")
+        return answer.strip().lower() == "y"
