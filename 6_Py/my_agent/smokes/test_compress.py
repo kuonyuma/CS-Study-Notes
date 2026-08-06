@@ -1,0 +1,82 @@
+from pathlib import Path
+import sys
+import asyncio
+from google.genai import types
+
+# 确保能正确导入项目目录中的模块
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+from core.context import content_compress
+
+
+async def test_compress_below_threshold():
+    """测试1：消息数量低于阈值时，不触发压缩，直接返回原列表"""
+    print("\n--- 测试 1: 未达到阈值 (max_len=10, 消息数=5) ---")
+    mock_contents = [
+        types.Content(role="user", parts=[types.Part.from_text(text=f"消息 {i}")])
+        for i in range(5)
+    ]
+    compressed = await content_compress(mock_contents, max_len=10)
+    assert len(compressed) == 5, f"预期长度为 5，实际长度为 {len(compressed)}"
+    print("[OK] 验证通过：低于阈值未触发压缩，保留原始 5 条消息。")
+
+
+async def test_compress_exceed_threshold():
+    """测试 2：消息数量达到/超过阈值时，触发压缩"""
+    print("\n--- 测试 2: 超过阈值 (max_len=10, 消息数=12) ---")
+
+    # 构造 12 条对话历史：首条 + 9 条中间对话 + 最近 2 条对话
+    first_msg = types.Content(
+        role="user", parts=[types.Part.from_text(text="初始任务：编写一个 Web 服务器")]
+    )
+    middle_msgs = [
+        types.Content(
+            role="model" if i % 2 == 1 else "user",
+            parts=[types.Part.from_text(text=f"中间步骤 {i}: 讨论框架与架构")],
+        )
+        for i in range(1, 10)
+    ]
+    recent_msgs = [
+        types.Content(role="user", parts=[types.Part.from_text(text="最新问题：支持 HTTPS 吗？")]),
+        types.Content(role="model", parts=[types.Part.from_text(text="支持，可以通过 ssl_context 配置。")]),
+    ]
+
+    mock_contents = [first_msg] + middle_msgs + recent_msgs
+    print(f"压缩前消息总条数: {len(mock_contents)}")
+
+    print("正在调用 LLM 进行上下文压缩...")
+    compressed = await content_compress(mock_contents, max_len=10)
+
+    print(f"压缩后消息总条数: {len(compressed)}")
+
+    # 验证结构
+    # 期待结果: [merged(user), ack(model), recent_msg_1, recent_msg_2] -> 共 4 条
+    assert len(compressed) == 4, f"预期压缩后为 4 条消息，实际为 {len(compressed)}"
+
+    # 验证第一条为合并后的 user 消息（初始任务 + 摘要，共 2 个 part）
+    assert compressed[0].role == "user"
+    assert compressed[0].parts[0].text == "初始任务：编写一个 Web 服务器"
+    assert len(compressed[0].parts) == 2, "合并消息应包含 2 个 part（原始任务 + 摘要）"
+
+    # 验证 ack 确认为 role="model"，维持角色交替
+    assert compressed[1].role == "model"
+    assert compressed[1].parts[0].text == "好的，我已了解之前的对话背景。"
+
+    # 验证最后两条保留了最近对话
+    assert compressed[-2].parts[0].text == "最新问题：支持 HTTPS 吗？"
+    assert compressed[-1].parts[0].text == "支持，可以通过 ssl_context 配置。"
+
+    # 打印总结内容（摘要在第一条消息的第 2 个 part 中）
+    summary_text = compressed[0].parts[1].text
+    print(f"\n[生成的摘要注入内容]:\n{summary_text}\n")
+    print("[OK] 验证通过：摘要合并到首条 user 消息，角色交替正确，不会被模型回吐。")
+
+
+async def main():
+    await test_compress_below_threshold()
+    await test_compress_exceed_threshold()
+
+
+if __name__ == "__main__":
+    asyncio.run(main())
+    print("\n所有测试完成！")

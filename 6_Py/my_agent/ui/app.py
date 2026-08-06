@@ -6,6 +6,7 @@ from rich.markdown import Markdown
 from rich.live import Live
 from tools.index import get_function_declarations
 from core.agentic_loop import LoopResult, query
+from core.context import content_compress
 
 console = Console()
 
@@ -32,6 +33,8 @@ class App:
             role="user", parts=[types.Part.from_text(text=user_query)]
         )
         self.contents.append(user_content)
+
+        self.contents = await content_compress(self.contents)
 
         result: LoopResult | None = None
         full_text: str = ""
