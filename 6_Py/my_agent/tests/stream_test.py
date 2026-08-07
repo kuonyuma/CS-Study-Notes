@@ -12,7 +12,7 @@ async def main():
     async for event in stream_message(contents="你好，请做一个简单的自我介绍"):
         if event.type == "text":
             sys.stdout.write(event.text)
-        if event.type == "tool_start":
+        if event.type == "tool_use_start":
             sys.stdout.write("模型将准备使用工具")
     print()
 

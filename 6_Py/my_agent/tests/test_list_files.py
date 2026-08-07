@@ -13,12 +13,12 @@ import asyncio
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from tools.list_files import ListFiles
+from tools.list_files import ListFilesTool
 
 
 async def test_list_current_dir():
     """测试: 列出项目根目录，应包含 tools/ 等已知子目录"""
-    tool = ListFiles()
+    tool = ListFilesTool()
     project_root = str(Path(__file__).resolve().parents[1])
     result = await tool.run({"path": project_root})
 
@@ -31,7 +31,7 @@ async def test_list_current_dir():
 
 async def test_nonexistent_path():
     """测试: 传入不存在的路径，应返回 is_error=True"""
-    tool = ListFiles()
+    tool = ListFilesTool()
     result = await tool.run({"path": "/this/path/does/not/exist/at_all"})
 
     assert result.is_error, "不存在的路径应返回 is_error=True"
@@ -40,7 +40,7 @@ async def test_nonexistent_path():
 
 async def test_default_path():
     """测试: 不传 path 参数，应默认列出当前目录且不报错"""
-    tool = ListFiles()
+    tool = ListFilesTool()
     result = await tool.run({})
 
     assert not result.is_error, f"默认路径不应报错, 但得到: {result.content}"
@@ -49,13 +49,13 @@ async def test_default_path():
 
 async def test_tool_metadata():
     """测试: 工具元数据应正确配置"""
-    tool = ListFiles()
+    tool = ListFilesTool()
 
-    assert tool.name == "ListFiles", f"name 应为 'ListFiles', 实际: {tool.name}"
+    assert tool.name == "list_files", f"name 应为 'list_files', 实际: {tool.name}"
     assert tool.read_only is True, "ListFiles 应是只读工具"
 
-    declaration = tool.get_tool_message()
-    assert declaration.name == "ListFiles"
+    declaration = tool.to_function_declaration()
+    assert declaration.name == "list_files"
     print("[PASS] test_tool_metadata")
 
 

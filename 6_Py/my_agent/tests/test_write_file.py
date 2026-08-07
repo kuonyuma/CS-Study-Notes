@@ -15,7 +15,7 @@ import shutil
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from tools.write_file import WriteFile
+from tools.write_file import WriteFileTool
 
 # 测试用临时目录
 TEMP_DIR = Path(__file__).resolve().parent / "_tmp_write_test"
@@ -29,7 +29,7 @@ def cleanup():
 
 async def test_write_new_file():
     """测试: 写入新文件，应成功且文件内容正确"""
-    tool = WriteFile()
+    tool = WriteFileTool()
     target = str(TEMP_DIR / "hello.txt")
     result = await tool.run({"path": target, "content": "hello_write_test"})
 
@@ -41,7 +41,7 @@ async def test_write_new_file():
 
 async def test_empty_path():
     """测试: 传入空路径，应返回 is_error=True"""
-    tool = WriteFile()
+    tool = WriteFileTool()
     result = await tool.run({"path": "", "content": "some content"})
 
     assert result.is_error, "空路径应返回 is_error=True"
@@ -50,7 +50,7 @@ async def test_empty_path():
 
 async def test_empty_content():
     """测试: 传入空内容，应返回 is_error=True"""
-    tool = WriteFile()
+    tool = WriteFileTool()
     result = await tool.run({"path": str(TEMP_DIR / "empty.txt"), "content": ""})
 
     assert result.is_error, "空内容应返回 is_error=True"
@@ -59,7 +59,7 @@ async def test_empty_content():
 
 async def test_nested_dir_creation():
     """测试: 写入到多层不存在的目录，应自动创建父目录"""
-    tool = WriteFile()
+    tool = WriteFileTool()
     target = str(TEMP_DIR / "a" / "b" / "c" / "deep.txt")
     result = await tool.run({"path": target, "content": "deep_content"})
 
@@ -72,7 +72,7 @@ async def test_nested_dir_creation():
 
 async def test_overwrite_file():
     """测试: 覆盖写入已有文件，内容应更新"""
-    tool = WriteFile()
+    tool = WriteFileTool()
     target = str(TEMP_DIR / "overwrite.txt")
 
     await tool.run({"path": target, "content": "first"})
@@ -85,14 +85,14 @@ async def test_overwrite_file():
 
 async def test_tool_metadata():
     """测试: 工具元数据应正确配置"""
-    tool = WriteFile()
+    tool = WriteFileTool()
 
     assert tool.name == "write_file", f"name 应为 'write_file', 实际: {tool.name}"
     assert tool.read_only is False, "WriteFile 不应是只读工具"
     assert "path" in tool.input_schema["required"], "path 应为必填参数"
     assert "content" in tool.input_schema["required"], "content 应为必填参数"
 
-    declaration = tool.get_tool_message()
+    declaration = tool.to_function_declaration()
     assert declaration.name == "write_file"
     print("[PASS] test_tool_metadata")
 

@@ -15,7 +15,7 @@ import shutil
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from tools.edit_file import EditFile
+from tools.edit_file import EditFileTool
 
 TEMP_DIR = Path(__file__).resolve().parent / "_tmp_edit_test"
 
@@ -35,7 +35,7 @@ def create_test_file(name: str, content: str) -> str:
 
 async def test_normal_replace():
     """测试: 正常替换唯一字符串"""
-    tool = EditFile()
+    tool = EditFileTool()
     path = create_test_file("normal.txt", "hello world")
     result = await tool.run({
         "path": path,
@@ -51,7 +51,7 @@ async def test_normal_replace():
 
 async def test_nonexistent_file():
     """测试: 编辑不存在的文件，应返回 is_error=True"""
-    tool = EditFile()
+    tool = EditFileTool()
     result = await tool.run({
         "path": "/no/such/file.txt",
         "old_string": "a",
@@ -64,7 +64,7 @@ async def test_nonexistent_file():
 
 async def test_no_match():
     """测试: 未找到匹配字符串，应返回 is_error=True"""
-    tool = EditFile()
+    tool = EditFileTool()
     path = create_test_file("nomatch.txt", "hello world")
     result = await tool.run({
         "path": path,
@@ -78,7 +78,7 @@ async def test_no_match():
 
 async def test_multiple_matches():
     """测试: 多次匹配时应拒绝修改"""
-    tool = EditFile()
+    tool = EditFileTool()
     path = create_test_file("multi.txt", "aaa bbb aaa")
     result = await tool.run({
         "path": path,
@@ -95,7 +95,7 @@ async def test_multiple_matches():
 
 async def test_tool_metadata():
     """测试: 工具元数据应正确配置"""
-    tool = EditFile()
+    tool = EditFileTool()
 
     assert tool.name == "edit_file", f"name 应为 'edit_file', 实际: {tool.name}"
     assert tool.read_only is False, "EditFile 不应是只读工具"
@@ -103,7 +103,7 @@ async def test_tool_metadata():
     assert "old_string" in tool.input_schema["required"], "old_string 应为必填参数"
     assert "new_string" in tool.input_schema["required"], "new_string 应为必填参数"
 
-    declaration = tool.get_tool_message()
+    declaration = tool.to_function_declaration()
     assert declaration.name == "edit_file"
     print("[PASS] test_tool_metadata")
 

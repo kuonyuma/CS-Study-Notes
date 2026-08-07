@@ -12,12 +12,12 @@ import asyncio
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from tools.command import Terminal
+from tools.run_command import RunCommandTool
 
 
 async def test_echo():
     """测试: 正常执行 echo 命令，输出应包含预期文本"""
-    terminal = Terminal()
+    terminal = RunCommandTool()
     result = await terminal.run({"command": "echo hello_terminal"})
 
     assert not result.is_error, f"echo 不应报错, 但得到: {result.content}"
@@ -32,7 +32,7 @@ async def test_echo():
 
 async def test_empty_command():
     """测试: 传入空命令，应返回 is_error=True"""
-    terminal = Terminal()
+    terminal = RunCommandTool()
     result = await terminal.run({"command": ""})
 
     assert result.is_error, "空命令应返回 is_error=True"
@@ -41,7 +41,7 @@ async def test_empty_command():
 
 async def test_missing_command_key():
     """测试: 不传 command 键，应返回 is_error=True"""
-    terminal = Terminal()
+    terminal = RunCommandTool()
     result = await terminal.run({})
 
     assert result.is_error, "缺少 command 键应返回 is_error=True"
@@ -50,7 +50,7 @@ async def test_missing_command_key():
 
 async def test_failing_command():
     """测试: 执行一个必然失败的命令，returncode 应非零"""
-    terminal = Terminal()
+    terminal = RunCommandTool()
     # 在 Windows 和 Unix 上都会失败的命令
     result = await terminal.run({"command": "exit 1"})
 
@@ -63,13 +63,13 @@ async def test_failing_command():
 
 async def test_tool_metadata():
     """测试: 工具元数据应正确配置"""
-    terminal = Terminal()
+    terminal = RunCommandTool()
 
     assert terminal.name == "run_command", f"name 应为 'run_command', 实际: {terminal.name}"
     assert terminal.read_only is False, "Terminal 不应是只读工具"
     assert "command" in terminal.input_schema["required"], "command 应为必填参数"
 
-    declaration = terminal.get_tool_message()
+    declaration = terminal.to_function_declaration()
     assert declaration.name == "run_command"
     print("[PASS] test_tool_metadata")
 

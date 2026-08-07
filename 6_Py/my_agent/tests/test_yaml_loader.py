@@ -16,7 +16,7 @@ import shutil
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from tools.yaml_loader import LoadYaml
+from tools.yaml_loader import LoadYamlTool
 
 TEMP_DIR = Path(__file__).resolve().parent / "_tmp_yaml_test"
 
@@ -35,7 +35,7 @@ def create_test_file(name: str, content: str) -> str:
 
 async def test_load_project_config():
     """测试: 加载项目 config/config.yaml，应成功"""
-    tool = LoadYaml()
+    tool = LoadYamlTool()
     config_path = str(Path(__file__).resolve().parents[1] / "config" / "config.yaml")
     result = await tool.run({"path": config_path})
 
@@ -46,7 +46,7 @@ async def test_load_project_config():
 
 async def test_load_custom_yaml():
     """测试: 加载自定义 YAML 文件，内容应被正确解析"""
-    tool = LoadYaml()
+    tool = LoadYamlTool()
     path = create_test_file("custom.yaml", "name: test\nversion: 1\n")
     result = await tool.run({"path": path})
 
@@ -58,7 +58,7 @@ async def test_load_custom_yaml():
 
 async def test_nonexistent_path():
     """测试: 不存在的路径，应返回 is_error=True"""
-    tool = LoadYaml()
+    tool = LoadYamlTool()
     result = await tool.run({"path": "/no/such/config.yaml"})
 
     assert result.is_error, "不存在的路径应返回 is_error=True"
@@ -67,7 +67,7 @@ async def test_nonexistent_path():
 
 async def test_empty_path():
     """测试: 空路径，应返回 is_error=True"""
-    tool = LoadYaml()
+    tool = LoadYamlTool()
     result = await tool.run({"path": ""})
 
     assert result.is_error, "空路径应返回 is_error=True"
@@ -76,7 +76,7 @@ async def test_empty_path():
 
 async def test_invalid_yaml():
     """测试: 无效 YAML 内容，应返回解析错误"""
-    tool = LoadYaml()
+    tool = LoadYamlTool()
     path = create_test_file("bad.yaml", ":\n  :\n    - ][invalid")
     result = await tool.run({"path": path})
 
@@ -86,7 +86,7 @@ async def test_invalid_yaml():
 
 async def test_empty_yaml_file():
     """测试: 空 YAML 文件，应返回错误"""
-    tool = LoadYaml()
+    tool = LoadYamlTool()
     path = create_test_file("empty.yaml", "")
     result = await tool.run({"path": path})
 
@@ -96,7 +96,7 @@ async def test_empty_yaml_file():
 
 async def test_missing_path_key():
     """测试: 不传 path 参数，应返回 is_error=True"""
-    tool = LoadYaml()
+    tool = LoadYamlTool()
     result = await tool.run({})
 
     assert result.is_error, "缺少 path 参数应返回 is_error=True"
@@ -105,12 +105,12 @@ async def test_missing_path_key():
 
 async def test_tool_metadata():
     """测试: 工具元数据应正确配置"""
-    tool = LoadYaml()
+    tool = LoadYamlTool()
 
     assert tool.name == "load_yaml", f"name 应为 'load_yaml', 实际: {tool.name}"
     assert tool.read_only is True, "LoadYaml 应是只读工具"
 
-    declaration = tool.get_tool_message()
+    declaration = tool.to_function_declaration()
     assert declaration.name == "load_yaml"
     print("[PASS] test_tool_metadata")
 

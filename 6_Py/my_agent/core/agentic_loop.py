@@ -1,11 +1,10 @@
 from dataclasses import dataclass
 from typing import Literal, AsyncGenerator, Callable
 from google.genai import types
-from client.stream_message import stream_message, StreamResult, StreamEvent
+from client.stream_message import stream_message, StreamResult
 import sys
 from tools.executor import execute_tools
 from tools.index import find_tool
-from pathlib import Path
 from config.settings import settings
 
 
@@ -56,8 +55,8 @@ async def query(
                 t = find_tool(fc.name)
 
                 if t and not t.read_only:
-                    if check:
-                        allowed = await check(fc.name, fc.args)
+                    if permission_check:
+                        allowed = await permission_check(fc.name, fc.args)
                         if not allowed:
                             is_denied = True
                             break

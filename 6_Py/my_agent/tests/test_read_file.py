@@ -13,12 +13,12 @@ import asyncio
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from tools.read_file import ReadFile
+from tools.read_file import ReadFileTool
 
 
 async def test_read_existing_file():
     """测试: 读取 main.py，应返回非空内容且不报错"""
-    tool = ReadFile()
+    tool = ReadFileTool()
     main_path = str(Path(__file__).resolve().parents[1] / "main.py")
     result = await tool.run({"path": main_path})
 
@@ -29,7 +29,7 @@ async def test_read_existing_file():
 
 async def test_read_nonexistent_file():
     """测试: 读取不存在的文件，应返回 is_error=True"""
-    tool = ReadFile()
+    tool = ReadFileTool()
     result = await tool.run({"path": "/no/such/file_abc123.txt"})
 
     assert result.is_error, "不存在的文件应返回 is_error=True"
@@ -38,7 +38,7 @@ async def test_read_nonexistent_file():
 
 async def test_read_self():
     """测试: 读取本测试文件自身，内容应包含此函数名"""
-    tool = ReadFile()
+    tool = ReadFileTool()
     result = await tool.run({"path": str(Path(__file__).resolve())})
 
     assert not result.is_error, f"读取自身不应报错, 但得到: {result.content}"
@@ -48,13 +48,13 @@ async def test_read_self():
 
 async def test_tool_metadata():
     """测试: 工具元数据应正确配置"""
-    tool = ReadFile()
+    tool = ReadFileTool()
 
     assert tool.name == "read_file", f"name 应为 'read_file', 实际: {tool.name}"
     assert tool.read_only is True, "ReadFile 应是只读工具"
     assert "path" in tool.input_schema["required"], "path 应为必填参数"
 
-    declaration = tool.get_tool_message()
+    declaration = tool.to_function_declaration()
     assert declaration.name == "read_file"
     print("[PASS] test_tool_metadata")
 
