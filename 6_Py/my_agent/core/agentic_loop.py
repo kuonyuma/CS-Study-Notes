@@ -4,7 +4,9 @@ from google.genai import types
 from client.stream_message import stream_message, StreamResult, StreamEvent
 import sys
 from tools.executor import execute_tools
-from tools.index import get_tool
+from tools.index import find_tool
+from pathlib import Path
+from config.settings import settings
 
 
 @dataclass
@@ -22,13 +24,19 @@ class LoopEvent:
 async def query(
     contents: list[types.Content],
     tools: list[types.Tool],
-    check: Callable | None = None,
+    permission_check: Callable | None = None,
 ) -> AsyncGenerator[LoopEvent, None]:
-    teir = 1
-    while teir <= 10:
-        teir += 1
+
+    turn = 1
+    while turn <= 10:
+        turn += 1
         result: StreamResult | None = None
-        async for event in stream_message(contents=contents, tools=tools):
+        async for event in stream_message(
+            contents=contents,
+            tools=tools,
+            system_prompt=settings.system_prompt,
+            max_tokens=settings.model_config.max_tokens,
+        ):
             if event.type == "text":
                 yield LoopEvent(type="text", text=event.text)
             if event.type == "message_done":
@@ -45,7 +53,7 @@ async def query(
 
             is_denied = False
             for fc in result.function_calls:
-                t = get_tool(fc.name)
+                t = find_tool(fc.name)
 
                 if t and not t.read_only:
                     if check:

@@ -1,5 +1,5 @@
 from google.genai import types
-from tools.index import get_tool
+from tools.index import find_tool
 
 
 async def execute_tools(function_calls: list[types.FunctionCall]) -> types.Content:
@@ -8,7 +8,7 @@ async def execute_tools(function_calls: list[types.FunctionCall]) -> types.Conte
     for fc in function_calls:
         name = fc.name or ""
         args = fc.args or {}
-        t = get_tool(name)
+        t = find_tool(name)
         if t is None:
             part = types.Part.from_function_response(
                 name=name, response={"result": f"未知的工具{name}"}

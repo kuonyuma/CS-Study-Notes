@@ -3,8 +3,8 @@ from tools.base import Tool, ToolResult
 from typing import Any
 
 
-class ListFiles(Tool):
-    name = "ListFiles"
+class ListFilesTool(Tool):
+    name = "list_files"
     description = (
         "获取指定目录下的所有文件和子目录列表。如果不传路径，默认列出当前目录."
     )

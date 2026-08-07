@@ -3,7 +3,7 @@ from tools.base import Tool, ToolResult
 from typing import Any
 
 
-class EditFile(Tool):
+class EditFileTool(Tool):
     name = "edit_file"
     description = (
         "Edit a file by replacing an exact string with a new string. "

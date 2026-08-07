@@ -20,7 +20,7 @@ class Tool(ABC):
     async def run(self, parameter: dict[str, Any]) -> ToolResult:
         pass
 
-    def get_tool_message(self):
+    def to_function_declaration(self):
         return types.FunctionDeclaration(
             name=self.name,
             description=self.description,

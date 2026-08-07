@@ -6,7 +6,7 @@ from rich.markdown import Markdown
 from rich.live import Live
 from tools.index import get_function_declarations
 from core.agentic_loop import LoopResult, query
-from core.context import content_compress
+from core.context import compress_context
 
 console = Console()
 
@@ -34,7 +34,7 @@ class App:
         )
         self.contents.append(user_content)
 
-        self.contents = await content_compress(self.contents)
+        self.contents = await compress_context(self.contents)
 
         result: LoopResult | None = None
         full_text: str = ""
@@ -42,7 +42,7 @@ class App:
             async for loop_event in query(
                 contents=self.contents,
                 tools=get_function_declarations(),
-                check=self.check,
+                permission_check=self.permission_check,
             ):
                 if loop_event.type == "text":
                     full_text += loop_event.text
@@ -58,7 +58,7 @@ class App:
             elif result.reason == "max_turns":
                 console.print("[yellow]代理陷入死循环[/yellow]")
 
-    async def check(self, name: str, parameter: dict) -> bool:
+    async def permission_check(self, name: str, parameter: dict) -> bool:
         console.print(f"\n[red]⚠️ 警告：大模型申请执行危险写入工具 `{name}`[/red]")
         console.print(f"[yellow]执行参数：{parameter}[/yellow]")
 

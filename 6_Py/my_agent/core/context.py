@@ -1,23 +1,20 @@
 from google.genai import types
 from client.stream_message import stream_message, StreamResult
 
-max_tokens: int = 4096
-max_len: int = 10
 
-
-async def content_compress(
+async def compress_context(
     content: list[types.Content],
     max_tokens: int = 4096,
-    max_len: int = 10,
+    max_history_len: int = 10,
 ) -> list[types.Content]:
-    if len(content) < max_len:
+    if len(content) < max_history_len:
         return content
 
     first_content = content[0]
-    recently_content = content[-2:]
-    old_compress = content[1:-2]
+    recent_content = content[-2:]
+    old_contents = content[1:-2]
 
-    if not old_compress:
+    if not old_contents:
         return content
 
     result: StreamResult | None = None
@@ -30,7 +27,7 @@ async def content_compress(
         "字数控制在 150 字以内，保持精炼。"
     )
 
-    query = old_compress + [
+    query = old_contents + [
         types.Content(role="user", parts=[types.Part.from_text(text=summary_prompt)])
     ]
 
@@ -59,7 +56,6 @@ async def content_compress(
             role="model",
             parts=[types.Part.from_text(text="好的，我已了解之前的对话背景。")],
         )
-        return [merged_content, ack_content] + recently_content
+        return [merged_content, ack_content] + recent_content
 
     return content
-
