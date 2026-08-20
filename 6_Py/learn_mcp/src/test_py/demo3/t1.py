@@ -1,4 +1,4 @@
-from demo1.counter import add
+from src.test_py.demo7.demo1.counter import add
 import sys
 
 for path in sys.path:
