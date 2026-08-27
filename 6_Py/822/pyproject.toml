@@ -1,0 +1,14 @@
+[project]
+name="http-learn"
+version="0.1.0"
+
+
+[dependency-groups]
+dev = [
+    "pytest>=9.1.1",
+]
+
+[build-system]
+requires =["hatchling"]
+build-backend = "hatchling.build"
+
