@@ -1,16 +1,14 @@
-from prompt_toolkit import prompt
-from prompt_toolkit.cursor_shapes import CursorShape
+from pathlib import Path
 
-while True:
-    name = prompt(
-        "请输入：",
-        is_password=False,
-        default="你好",
-        bottom_toolbar="提示：按 Ctrl+C 退出",
-        rprompt="测试信息",
-        cursor=CursorShape.UNDERLINE,
-        multiline=True,
-    )
-    print(f"得到结果{name}")
-    if "exit" == name:
-        break
+"""
+info.json
+info
+.json
+data/users
+"""
+path = Path("data/users/info.json")
+
+print(path.name)
+print(path.stem)
+print(path.suffix)
+print(path.parent)

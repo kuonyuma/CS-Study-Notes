@@ -1,16 +1,23 @@
-from prompt_toolkit import prompt, PromptSession
+import yaml
 
-# 方式一：一次性输入（简单脚本）
-name = prompt("请输入你的名字: ")
-print(f"你好, {name}!")
+with open("config.yaml", "r", encoding="utf-8") as f:
+    config = yaml.safe_load(f)
 
-# 方式二：连续会话（推荐用于 REPL / 交互循环）
-session = PromptSession()
-while True:
-    try:
-        cmd = session.prompt("my-cli > ")
-        if cmd == "exit":
-            break
-        print(f"执行命令: {cmd}")
-    except (KeyboardInterrupt, EOFError):
-        break
+# 反序列化
+
+
+print(config)
+
+data = {
+    "port": 8080,
+    "enabled": True
+}
+
+with open("config.yaml", "w", encoding="utf-8") as f:
+    yaml.safe_dump(
+        data,
+        f,
+        allow_unicode=True,
+        sort_keys=False,
+        default_flow_style=False,
+    )

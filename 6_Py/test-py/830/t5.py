@@ -1,18 +1,10 @@
-from time import sleep
-from rich.console import Console
+import json
 
-console = Console()
-
-with console.status(
-    "[bold cyan]正在连接服务器...",
-    spinner="dots",
-    speed=12,
-    refresh_per_second=14,
-) as status:
-    
-    sleep(3)
-    status.update("[bold cyan]服务器接收到相应..")
-    sleep(3)
-
-
-console.print("连接完成", style="green")
+text = '{"name": "demo", "enabled": true, "count": 2}'
+text_again = json.loads(text)
+print(text_again['name'],text_again['enabled'])
+print(type(text))
+print(type(text_again))
+text_again = json.dumps(text_again)
+print(type(text_again))
+print(text_again)
