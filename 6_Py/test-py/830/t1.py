@@ -1,23 +1,18 @@
-import yaml
+def outer():
+    x = 100
+    y = 1
+    def inner():
 
-with open("config.yaml", "r", encoding="utf-8") as f:
-    config = yaml.safe_load(f)
+        print(x,y)
 
-# 反序列化
+    return inner
 
+f = outer()
 
-print(config)
+print(f.__closure__)
 
-data = {
-    "port": 8080,
-    "enabled": True
-}
+print(type(f.__closure__))
 
-with open("config.yaml", "w", encoding="utf-8") as f:
-    yaml.safe_dump(
-        data,
-        f,
-        allow_unicode=True,
-        sort_keys=False,
-        default_flow_style=False,
-    )
+print(len(f.__closure__))
+
+print(f.__closure__[0].cell_contents)
