@@ -1,74 +1,83 @@
 from google.genai import types
-from google import genai
 from collections.abc import AsyncGenerator
 from dataclasses import dataclass
-from typing import Literal,Any
-import os
+from typing import Literal, Any
+from mini_agent.client.client import get_client
+from mini_agent.config.settings import setting
 
-@dataclass(frozen=True)
-class Model_Event:
-    type:Literal["start","text","tool_begin","done"]
-    text:str = ""
-    tool_id:str = ""
-    tool_name:str = ""
-    result:Model_Result|None = None
+
 
 @dataclass(frozen=True)
 class Model_Result:
-    full_text :str
-    sotp_reason:str
-    calls:list[types.FunctionCall]
-    usege:dict[str,Any]
-    parts:types.Part
-    
+    full_text: str
+    stop_reason: str
+    calls: list[types.FunctionCall]
+    usage: dict[str, Any]
+    parts: list[types.Part]
+
+@dataclass(frozen=True)
+class ModelEvent:
+    type:Literal["begin","end","tool","text"]
+    tool_name:str = ""
+    tool_id:str = ""
+    text:str=""
+    result:Model_Result|None = None
 
 async def ask_gemini(
-        contents:list[types.Content],
-        tools:list[types.Tool] | None = None,
-        system_prompt:str = "你是一位coding助手"
-)->AsyncGenerator[Event|None]:
-    key = os.getenv("GEMINI_API_KEY",default="") 
-    client = genai.Client(api_key=key)
+    contents: list[types.Content],
+    system_prompt:str,
+    tools: list[types.Tool] | None = None,
+) -> AsyncGenerator[ModelEvent]:
+    client = get_client()
+
     config = types.GenerateContentConfig(
-        max_output_tokens=4999,
-        tools=tools,
-        system_instruction=system_prompt
+        max_output_tokens=4999, tools=tools, system_instruction=system_prompt
     )
     response = await client.aio.models.generate_content_stream(
-        model="gemini-3.8-flash",
+        model=setting.model.name,
         contents=contents,
         config=config,
     )
-    full_text : str =""
-    calls:list[types.FunctionCall] = []
+    full_text: str = ""
+    calls: list[types.FunctionCall] = []
+    usage: dict[str, Any] = {}
+    full_parts = []
+    stop:str = ""
+
     async for chunk in response:
-        if chunk.candidates and chunk.candidates[0].content:
-            content = chunk.candidates[0].content
-            if content.parts:
+        if chunk.usage_metadata is not None:
+            usage["input"] = chunk.usage_metadata.prompt_token_count
+            usage["output"] = chunk.usage_metadata.candidates_token_count
+        if chunk.candidates and chunk.candidates[0]:
+            candidate = chunk.candidates[0]
+            if candidate.finish_reason is not None:
+                stop = str(candidate.finish_reason)
+            content = candidate.content
+            if content and content.parts:
                 parts = content.parts
                 for part in parts:
+                    full_parts.append(part)
                     if part.text:
                         full_text += part.text
-                        yield Event(type="text",text=part.text)
+                        yield ModelEvent(type="text", text=part.text)
                     if part.function_call:
+                        yield ModelEvent(type="tool")
                         fc = part.function_call
                         calls.append(fc)
                         name = fc.name or ""
                         id = fc.id or ""
-                        yield Event(
+                        yield ModelEvent(
                             tool_name=name,
                             tool_id=id,
                             type="tool",
                         )
 
-    result = Result(full_text=full_text,calls=calls)
+    result = Model_Result(
+        full_text=full_text,
+        calls=calls,
+        parts=full_parts,
+        usage=usage,
+        sotp_reason=stop,
+    )
 
-    yield Event(type="done",result=result)
-
-
-
-
-        
-
-
-
+    yield ModelEvent(type="end", result=result)

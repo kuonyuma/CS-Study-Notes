@@ -1,11 +1,12 @@
 
-# 工具的基类
+
 from abc import ABC,abstractmethod
 from dataclasses import dataclass
 from typing import ClassVar,Any
 from google.genai import types
+
 @dataclass
-class Result:
+class ToolResult:
     content:str
     error:bool
 
@@ -16,7 +17,7 @@ class Tool(ABC):
     read_only: ClassVar[bool] = True
 
     @abstractmethod
-    async def run(self, agument: dict[str, Any]) -> Result:
+    async def run(self, agument: dict[str, Any]) -> ToolResult:
         pass
 
     def get_description(self)->types.FunctionDeclaration:
