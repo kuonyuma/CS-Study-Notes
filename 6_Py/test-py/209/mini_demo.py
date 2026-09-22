@@ -1,9 +1,10 @@
 from fastapi import FastAPI,Depends,HTTPException
 from typing import Annotated
 from pydantic import BaseModel
-
+from routers.users import router as user_router
 app = FastAPI()
 
+app.include_router(user_router)
 fake_db:dict[int,dict] ={
     1001:{
         "name":"ryuke",
