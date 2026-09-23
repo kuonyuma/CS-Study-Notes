@@ -1,0 +1,7 @@
+# 环境变量私密配置文件（切勿提交到 git 仓库）
+.env
+
+# Python 虚拟环境与缓存
+.venv/
+__pycache__/
+*.pyc
