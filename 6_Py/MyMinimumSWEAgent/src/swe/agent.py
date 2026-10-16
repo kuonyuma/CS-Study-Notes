@@ -279,9 +279,6 @@ class Agent:
             self.trace("system", f"错误：工具 {tool_name} 未注册")
             self.think()
 
-    # --------------------------------------------------------
-    # 入口方法
-    # --------------------------------------------------------
 
     def execute(self, query: str) -> str:
         """
@@ -352,11 +349,11 @@ def run(query: str) -> str:
 
 
 if __name__ == "__main__":
+    # 用户的prompt
     user_query = "你好，你是我写的第一个agent！"
     if len(sys.argv) > 1:
         user_query = " ".join(sys.argv[1:])
 
-    logger.info(f"用户请求: {user_query}")
     final_answer = run(user_query)
     print("\n" + "=" * 50)
     print(f"最终结果: {final_answer}")
